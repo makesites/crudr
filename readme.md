@@ -1,6 +1,6 @@
-# cruder
+# CRUDer
 
-__Crud functionality for mongoose-models. Fits well with express.js__
+__Open source module for socket-enabled CRUD operations in Node.js__
 
 
 ## Install
@@ -8,7 +8,7 @@ __Crud functionality for mongoose-models. Fits well with express.js__
     λ npm install cruder
 
 
-## With express.js magic
+## Example
 
     var express = require('express')
       , app = module.exports = express.createServer()
@@ -20,16 +20,11 @@ __Crud functionality for mongoose-models. Fits well with express.js__
     })
 
 
-## Without express.js magic
+## Dependencies 
 
-    var mongoose = require('mongoose')
-      , Model = mongoose.model('Model')
-      , cruder = require('cruded').form
-
-    cruder(Model, function (err, form) {
-      if (err) return console.err(err)
-      console.dir(form)
-    })
+- Socket.io
+- Express
+- Jade
 
 
 ## Constributors
