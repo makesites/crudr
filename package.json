@@ -1,0 +1,32 @@
+{
+  "name": "cruder",
+  "version": "0.0.1",
+  "description": "Open source module for socket-enabled CRUD operations in Node.js",
+  "author": "Make Sites",
+  "contributors": [
+    { "name": "Makis Tracend", "email": "makis@makesit.es" }
+  ],
+  "homepage": "http://www.makesites.org/cruder", 
+  "keywords": ["node.js", "crud", "api"], 
+  "main": "./index.js",
+  "engines": {
+    "node": ">0.4.x"
+  },
+  "dependencies": {
+    "jade": ">0.13.x"
+  }, 
+  "repository": {
+    "type": "svn",
+    "url": "https://github.com/makesites/cruder"
+  },
+  "bugs": {
+    "url": "https://github.com/makesites/cruder/issues"
+  }, 
+  "licenses": [
+    {
+      "type": "Apache License, Version 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ]
+
+}
