@@ -1,32 +1,37 @@
 {
-  "name": "cruder",
+  "name": "CRUDr",
   "version": "0.0.1",
   "description": "Open source module for socket-enabled CRUD operations in Node.js",
   "author": "Make Sites",
   "contributors": [
     { "name": "Makis Tracend", "email": "makis@makesit.es" }
   ],
-  "homepage": "http://www.makesites.org/cruder", 
+  "homepage": "http://www.makesites.org/crudr", 
   "keywords": ["node.js", "crud", "api"], 
   "main": "./index.js",
   "engines": {
     "node": ">0.4.x"
-  },
-  "dependencies": {
-    "jade": ">0.13.x"
   }, 
   "repository": {
-    "type": "svn",
-    "url": "https://github.com/makesites/cruder"
+    "type": "git",
+    "url": "https://github.com/makesites/crudr"
   },
   "bugs": {
-    "url": "https://github.com/makesites/cruder/issues"
+    "url": "https://github.com/makesites/crudr/issues"
   }, 
   "licenses": [
     {
       "type": "Apache License, Version 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     }
-  ]
-
+  ], 
+  "dependencies": {
+	"socket.io": ">= 0.8.7", 
+    "jade": ">0.13.x"
+  }, 
+  "devDependencies": {
+	"express": ">= 2.5.0",
+	"mocha": ">= 0.3.6",
+	"sinon": ">= 1.2.0"
+  }
 }
