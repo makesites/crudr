@@ -1,7 +1,7 @@
 var express = require("express"),
 	jade = require("jade")
 	// First important line: 
-	cruder = require("cruder");
+	crudr = require("crudr");
 
 var app = express.createServer();
 
