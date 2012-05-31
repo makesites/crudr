@@ -1,8 +1,8 @@
 {
-  "name": "CRUDr",
+  "name": "crudr",
   "version": "0.0.1",
   "description": "Open source module for socket-enabled CRUD operations in Node.js",
-  "author": "Make Sites",
+  "author": "makesites.org",
   "contributors": [
     { "name": "Makis Tracend", "email": "makis@makesit.es" }
   ],
