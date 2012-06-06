@@ -1,2 +1,2 @@
 
-module.exports = require('./lib/cruder');
+module.exports = require('./lib/index');
