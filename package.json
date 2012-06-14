@@ -27,6 +27,7 @@
   ], 
   "dependencies": {
 	"socket.io": ">= 0.8.7", 
+    "node.extend": ">= 0.0.1", 
     "jade": ">0.13.x"
   }, 
   "devDependencies": {
