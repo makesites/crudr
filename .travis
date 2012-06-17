@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+    - 0.6
+before_install: "bash test/setup-travis.sh"
+notifications:
+    email:
+        - makis@makesit.es
+branches:
+    only:
+        - master
