@@ -13,5 +13,9 @@ module.exports = config = {
 		"read" : "/crudr/read", 
 		"update" : "/crudr/update", 
 		"delete" : "/crudr/delete"
+	}, 
+	"action" : {
+		"register" : "/crudr/register", 
+		"reset" : "/crudr/reset"
 	}
 }
