@@ -17,5 +17,8 @@ module.exports = config = {
 	"action" : {
 		"register" : "/crudr/register", 
 		"reset" : "/crudr/reset"
+	}, 
+	"backends" : { 
+		"mybackend" : "memoryStore"
 	}
 }
