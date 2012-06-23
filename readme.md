@@ -11,30 +11,32 @@ __Open source module for socket-enabled CRUD operations in Node.js__
 ## Example
 
 On the server:
+```
 	var http = require('http'), 
-    	crud = require('crudr'), 
-    	app = http.createServer(),     
-    	backend = crudr.createBackend();
-		
+	crud = require('crudr'), 
+	app = http.createServer(),     
+	
 	app.listen(3000);
-    backend.use(crudr.helpers.memoryStore());
-    crudr.listen(app, { mybackend: backend });
-    
+	crudr.listen(app, options);
+```
+
 On the client:
+```
 	<script src="/client.js"></script>
     
-    <script>
-        crudr.connect( key, options, function(){ 
-		// .. initiate app
+	<script>
+	crudr.connect( key, options, function(){ 
+	// .. initiate app
 	});
-    </script>
+	</script>
 	
+```
 
 ## Dependencies 
 
 - Socket.io
 - Express
-- Jade
+- Nconf
 
 
 
@@ -44,46 +46,32 @@ When a model is synced with a particular backend, the backend will trigger event
 on collections (across multiple clients) that share the backend.  For example, we
 could keep collections synced in realtime with the following event bindings:
 
-    var MyCollection = Backbone.Collection.extend({
-        
-        backend: 'mybackend',
-        
-        initialize: function() {
-            var self = this;
-        
-            this.bind('backend:create', function(model) {
-                self.add(model);
-            });
-            this.bind('backend:update', function(model) {
-                self.get(model.id).set(model);
-            });
-            this.bind('backend:delete', function(model) {
-                self.remove(model.id);
-            });
-        }
-        
-    });
-    
-Or use the provided shortcut:
-    
-    backend: 'mybackend',
-    
-    initialize: function() {
-        this.bindBackend();
-    }
-    
+```
+	var self = this;
+	
+	this.bind('backend:create', function(model) {
+	self.add(model);
+	});
+	this.bind('backend:update', function(model) {
+	self.get(model.id).set(model);
+	});
+	this.bind('backend:delete', function(model) {
+	self.remove(model.id);
+	});
+```
+
 In addition to `backend:create`, `backend:read`, `backend:update`, and `backend:delete`
 events, a generic `backend` event is also triggered when a model is synced.
-
-    this.bind('backend', function(method, model) {
-        // Method will be one of create, read, update, or delete
-    });
-    
+```	
+	this.bind('backend', function(method, model) {
+	// Method will be one of create, read, update, or delete
+	});
+```   
 The event prefix `backend` is used by default but this can be customized by setting the
 event name on the server.
-
-    crudr.listen(app, { mybackend: backend }, { event: 'myevent' });
-
+```
+	crudr.listen(app, options, { event: 'myevent' });
+```
 
 ## Backends and Middleware
 
@@ -94,8 +82,7 @@ to continue down the stack).  A middleware will generally either return a result
 calling `end` on the response object or pass control downward.  For example, let's add a
 logger middleware to our backend:
 
-    var backend = backboneio.createBackend();
-    
+    var backend = crudr.createBackend();
     backend.use(function(req, res, next) {
         console.log(req.backend);
         console.log(req.method);
@@ -103,7 +90,7 @@ logger middleware to our backend:
         next();
     });
     
-    backend.use(backboneio.middleware.memoryStore());
+    backend.use(crudr.middleware.memoryStore());
     
 A request object will contain the following components (in addition to those set by
 various middleware):
