@@ -24,7 +24,9 @@ On the client:
 	<script src="/client.js"></script>
     
     <script>
-        var crud = new CRUDr('api_key', options);
+        crudr.connect( key, options, function(){ 
+		// .. initiate app
+	});
     </script>
 	
 
