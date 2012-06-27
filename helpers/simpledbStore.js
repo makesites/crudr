@@ -1,59 +1,154 @@
 /*
 	Available SimpleDB methods: 
 	
-	batchDeleteAttributes
-	batchPutAttributes
-	createDomain
-	deleteAttributes
-	deleteDomain
-	domainMetadata
-	getAttributes
-	listDomains
-	putAttributes
-	select
+	BatchPutAttributes
+	CreateDomain
+	DeleteDomain
+	ListDomains
+	DomainMetadata
+	DeleteAttributes
+	PutAttributes
+	Select
+	GetAttributes
+	
 */
 
-module.exports = function(aws) {
+module.exports = function(sdb) {
     return function(req, res, next) {
 		
-		aws.sdb.listDomains({}, 'sdb.amazonaws.com').onSuccess(function() {
-		  console.log(this.requestId, this.data);
-		})
-		// create the domain (if not availabe)
-		aws.sdb.createDomain({ domainName: req.backend});
-		
+		// general parsing of the model
         var callback = function(err, result) {
-            if (err) return next(err);
-            res.end(result);
+			//console.log(err);
+			if (err) return next(err);
+            //console.log(result);
+			res.end(req.model);
         };
         
+		var createQuery = function(model, options){
+			//default options
+			options || (options = {});
+			options.replace || (options.replace = false);
+			options.json || (options.json = false);
+			options.noAttr || (options.noAttr = false);
+			
+			var query = {};
+			var count = 0;
+			
+			query.DomainName = req.backend;
+			query.ItemName = model.id;
+			// if we don't require any attributes end now
+			if(options.noAttr) return query;
+			
+			// deal with attributes
+			if(options.json) { 
+				// save the whole model in one value
+				query["Attribute.Name"] = "json"; 
+				query["Attribute.Value"] = JSON.stringify(model); 
+				if(options.replace) query["Attribute.Replace"] = true; 
+				
+			} else {
+				// split the model to seperate attributes
+				for (var key in model) {
+					if( key == "id" ) continue;
+					var item = new Array()
+					query["Attribute."+ count +".Name"] = key; 
+					query["Attribute."+ count +".Value"] = model[key]; 
+					if(options.replace) query["Attribute."+ count +".Replace"] = true; 
+					count++;
+				}
+			}
+			
+			return query;
+		}
+		
+		var createResponse = function( result ) {
+			
+			// return empty if there are no results
+			if( typeof(result["SelectResult"]["Item"]) == "undefined"){ 
+				return {};
+			}
+			
+			if( result["SelectResult"]["Item"] instanceof Array ){ 
+			
+				// deconstruct the response to an array
+				var collection = [];
+			
+				for( i in result["SelectResult"]["Item"] ){
+					var model = {};
+					var attr = result["SelectResult"]["Item"][i]["Attribute"];
+					
+					// parse as independent attributes 
+					var key = "";	
+					for( k in attr ){
+						
+						switch(k){
+							case "Name":
+								key = attr[k];
+								model[key] = 0;
+							break;
+							case "Value":
+								if( key == "json" ){ 	
+									model = JSON.parse( attr[k] );
+								} else {
+									model[key] = attr[k];
+								}
+							break;
+						}
+						//model[attr[k]["Name"]] = attr[k]["Value"];
+					}
+					// ovewrite any model id present with the Attribute Name
+					model.id  = result["SelectResult"]["Item"][i]["Name"];
+					collection.push(model);
+					
+				}
+				
+			} else {
+				var model = {};
+				var attr = result["SelectResult"]["Item"]["Attribute"];
+				
+				if( attr["Name"] == "json" ){ 	
+					// parse as a json file
+					model = JSON.parse( attr["Value"] );
+				} else {
+					model[attr["Name"]] = attr["Value"];
+				}
+				
+				// ovewrite any model id present with the Attribute Name
+				model.id  = result["SelectResult"]["Item"]["Name"];
+				
+			}
+			
+			// check if we have a model or collection returned 
+			return collection || model;
+			
+		}
+		
+		// - helpers
+		/*var size = function(obj) {
+			var size = 0, key;
+			for (key in obj) {
+				if (obj.hasOwnProperty(key)) size++;
+			}
+			return size;
+		}*/
+	
+		/*sdb.call("ListDomains", {}, function(err, result) {
+		  console.log(JSON.stringify(result));
+		});*/
+		// create the domain (if not availabe)
+		sdb.call("CreateDomain", { DomainName: req.backend }, function(err, result) {
+            if (err) return next(err);
+			console.log(JSON.stringify(result));
+		});
         var crud = {
             create: function() {
-                var attributes = [];
-                for (var key in req.model) {
-					if( key == "id" ) continue;
-					attributes.push({ name: key, value: req.model[key] });
-                }
+                
+				if( typeof( req.model.id ) == "undefined" ) req.model.id = (new Date).getTime();
+			
+				var query = createQuery( req.model, { json: true });
 				
-                if( typeof( req.model.id ) == "undefined" ) req.model.id = (new Date).getTime();
+				sdb.call("PutAttributes", query, callback);
 				
-				aws.sdb.putAttributes(
-				  {
-					domainName: req.backend,
-					itemName: req.model.id,
-					attributes: attributes,
-				  }
-				  // You can optionally override the default endpoint on a
-				  // per-request basis as well.
-				  //'sdb.us-west-1.amazonaws.com'
-				).onSuccess(function() {
-				  //console.log(this.requestId, this.data);
-				  res.end(req.model);
-				}).onFailure(function() {
-				  console.log(this.requestId, this.error);
-				  if (this.error) return next(this.error);
-                    res.end(req.model);
-				});
             },
             
             read: function() {
@@ -64,90 +159,37 @@ module.exports = function(aws) {
 					query += " where  itemName() = '"+ req.model.id +"'";
 				}
 				
-                aws.sdb.select({ selectExpression: query })
-					
-					.onSuccess(function() {
-					  // it worked!
-					  //console.log(this.requestId, this.data);
-					  // deconstruct the response to an array
-					  var collection = [];
-					  for( i in this.data.items ){
-						  var model = {};
-						  model.id  = this.data.items[i].name;
-						  var attributes = this.data.items[i].attributes;
-						  for( k in attributes ){
-							  model[attributes[k].name] = attributes[k].value;
-						  }
-						  collection.push(model);
-					  }
-					  //console.log( collection );
-					  res.end(collection);
-					  
-					}).onFailure(function() {
-					  console.log(this.requestId, this.error);
-					  if (this.error) return next(this.error);
-						res.end(req.model);
-					});
-
+				sdb.call("Select", { SelectExpression: query }, function(err, result) {
+					if (err) return next(err);
+					res.end( createResponse(result) );
+				});
+				
             },
             
             update: function() {
-                var attributes = [];
-                for (var key in req.model) {
-					if( key == "id" ) continue;
-					attributes.push({ name: key, value: req.model[key], replace: true });
-                }
-                var id = ( typeof( req.model.id ) != "undefined" ) ? req.model.id : (new Date).getTime();
+                
+                if( typeof( req.model.id ) == "undefined" ) req.model.id = (new Date).getTime();
 				
-				aws.sdb.putAttributes(
-				  {
-					domainName: req.backend,
-					itemName: id,
-					attributes: attributes,
-				  }
-				  // You can optionally override the default endpoint on a
-				  // per-request basis as well.
-				  //'sdb.us-west-1.amazonaws.com'
-				).onSuccess(function() {
-				  // it worked!
-				  //console.log(this.requestId, this.data);
-				  res.end(req.model);
-				}).onFailure(function() {
-				  // uh oh!
-				  console.log(this.requestId, this.error);
-				  if (this.error) return next(this.error);
-                    res.end(req.model);
-				});
-
+				var query = createQuery( req.model, { replace : true, json: true });
+				
+				sdb.call("PutAttributes", query, callback);
+				
             },
             
             delete: function() {
-				var attributes = [];
-                for (var key in req.model) {
-					if( key == "id" ) continue;
-					attributes.push({ name: key, value: req.model[key], replace: true });
-                }
-				var id = ( typeof( req.model.id ) != "undefined" ) ? req.model.id : (new Date).getTime();
 				
-                aws.sdb.deleteAttributes({
-					domainName: req.backend,
-					itemName: id,
-					attributes: attributes,
-					expected: [ { name: "quantity", value: "1", exists: true } ]
-				}).onSuccess(function() {
-				  //console.log(this.requestId, this.data);
-				  res.end(req.model);
-				}).onFailure(function() {
-				  // uh oh!
-				  console.log(this.requestId, this.error);
-				  if (this.error) return next(this.error);
-                    res.end(req.model);
-				});
+				if( typeof( req.model.id ) == "undefined" ) req.model.id = (new Date).getTime();
+				
+				var query = createQuery( req.model, { json: true, noAttr: true } );
+				
+				sdb.call("DeleteAttributes", query, callback);
+				
             }
         };
         
         if (!crud[req.method]) return next(new Error('Unsuppored method ' + req.method));
         crud[req.method]();
     }
+	
 };
 
