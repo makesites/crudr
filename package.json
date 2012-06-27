@@ -1,6 +1,6 @@
 {
   "name": "crudr",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Open source module for socket-enabled CRUD operations in Node.js",
   "author": "makesites",
   "contributors": [
@@ -28,8 +28,7 @@
   "dependencies": {
 	"socket.io": ">= 0.8.7", 
     "node.extend": ">= 0.0.1", 
-    "nconf": ">0.6.x", 
-    "jade": ">0.13.x"
+    "nconf": ">0.6.x"
   }, 
   "devDependencies": {
 	"express": ">= 2.5.0",
