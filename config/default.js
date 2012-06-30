@@ -1,5 +1,5 @@
 module.exports = config = {
-	"name" : "CRUDr",
+	"name" : "crudr",
 	"host" : "localhost", 
 	"static" : {
 		"client.js": "/crudr/client.js", 
