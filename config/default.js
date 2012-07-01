@@ -8,6 +8,7 @@ module.exports = config = {
 	"oauth" : {
 		"authorize" : "/oauth/authorize"
 	}, 
+	"path" : "/crudr", 
 	"routes" : {
 		"create" : "/crudr/create", 
 		"read" : "/crudr/read", 
