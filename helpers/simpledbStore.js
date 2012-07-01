@@ -21,7 +21,7 @@ module.exports = function(sdb) {
 			//console.log(err);
 			if (err) return next(err);
             //console.log(result);
-			res.end(req.model);
+			res.end( JSON.stringify( req.model ));
         };
         
 		var createQuery = function(model, options){
@@ -61,21 +61,21 @@ module.exports = function(sdb) {
 			return query;
 		}
 		
-		var createResponse = function( result ) {
-			
+		var createResponse = function( data ) {
+					
 			// return empty if there are no results
-			if( typeof(result["SelectResult"]["Item"]) == "undefined"){ 
-				return {};
+			if( typeof(data["Item"]) == "undefined"){ 
+				return false;
 			}
 			
-			if( result["SelectResult"]["Item"] instanceof Array ){ 
+			if( data["Item"] instanceof Array ){ 
 			
 				// deconstruct the response to an array
 				var collection = [];
 			
-				for( i in result["SelectResult"]["Item"] ){
+				for( i in data["Item"] ){
 					var model = {};
-					var attr = result["SelectResult"]["Item"][i]["Attribute"];
+					var attr = data[i]["Attribute"];
 					
 					// parse as independent attributes 
 					var key = "";	
@@ -97,14 +97,14 @@ module.exports = function(sdb) {
 						//model[attr[k]["Name"]] = attr[k]["Value"];
 					}
 					// ovewrite any model id present with the Attribute Name
-					model.id  = result["SelectResult"]["Item"][i]["Name"];
+					model.id  = data["Item"][i]["Name"];
 					collection.push(model);
 					
 				}
 				
 			} else {
 				var model = {};
-				var attr = result["SelectResult"]["Item"]["Attribute"];
+				var attr = data["Item"]["Attribute"];
 				
 				if( attr["Name"] == "json" ){ 	
 					// parse as a json file
@@ -114,7 +114,7 @@ module.exports = function(sdb) {
 				}
 				
 				// ovewrite any model id present with the Attribute Name
-				model.id  = result["SelectResult"]["Item"]["Name"];
+				model.id  = data["Item"]["Name"];
 				
 			}
 			
@@ -161,7 +161,9 @@ module.exports = function(sdb) {
 				
 				sdb.call("Select", { SelectExpression: query }, function(err, result) {
 					if (err) return next(err);
-					res.end( createResponse(result) );
+					var response = createResponse( result["SelectResult"] );
+					if(!response) response = req.model;
+					res.end( JSON.stringify( response  ));
 				});
 				
             },
