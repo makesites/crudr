@@ -8,13 +8,16 @@ module.exports = config = {
 	"oauth" : {
 		"authorize" : "/oauth/authorize"
 	}, 
-	"path" : "/crudr", 
+	"path" : "/data", 
+	"domain_prefix" : "", 
+	/*
 	"routes" : {
 		"create" : "/crudr/create", 
 		"read" : "/crudr/read", 
 		"update" : "/crudr/update", 
 		"delete" : "/crudr/delete"
 	}, 
+	*/
 	"action" : {
 		"register" : "/crudr/register", 
 		"reset" : "/crudr/reset"
