@@ -40,23 +40,40 @@ module.exports = function(sdb) {
 			if(options.noAttr) return query;
 			
 			// deal with attributes
+			for (var key in model) {
+				//if( key == "id" ) continue;
+				var item = new Array()
+				query["Attribute."+ count +".Name"] = key; 
+				query["Attribute."+ count +".Value"] = ( typeof(model[key]) != "object") ? model[key] : JSON.stringify(model[key]); 
+				if(options.replace) query["Attribute."+ count +".Replace"] = true; 
+				count++;
+			}
+			/*
 			if(options.json) { 
 				// save the whole model in one value
-				query["Attribute.Name"] = "json"; 
-				query["Attribute.Value"] = JSON.stringify(model); 
-				if(options.replace) query["Attribute.Replace"] = true; 
-				
-			} else {
-				// split the model to seperate attributes
+				//query["Attribute.Name"] = "json"; 
+				//query["Attribute.Value"] = JSON.stringify(model); 
+				//if(options.replace) query["Attribute.Replace"] = true; 
 				for (var key in model) {
-					if( key == "id" ) continue;
+					//if( key == "id" ) continue;
 					var item = new Array()
 					query["Attribute."+ count +".Name"] = key; 
 					query["Attribute."+ count +".Value"] = model[key]; 
 					if(options.replace) query["Attribute."+ count +".Replace"] = true; 
 					count++;
 				}
-			}
+				
+			} else {
+				// split the model to seperate attributes
+				for (var key in model) {
+					//if( key == "id" ) continue;
+					var item = new Array()
+					query["Attribute."+ count +".Name"] = key; 
+					query["Attribute."+ count +".Value"] = model[key]; 
+					if(options.replace) query["Attribute."+ count +".Replace"] = true; 
+					count++;
+				}
+			}*/
 			
 			return query;
 		}
@@ -87,11 +104,14 @@ module.exports = function(sdb) {
 								model[key] = 0;
 							break;
 							case "Value":
-								if( key == "json" ){ 	
+								//if( key == "json" ){ 
+								// parse all attributes as json
+									//console.log(attr[k]);
 									model = JSON.parse( attr[k] );
-								} else {
-									model[key] = attr[k];
-								}
+									//console.log(model);
+								//} else {
+								//	model[key] = attr[k];
+								//}
 							break;
 						}
 						//model[attr[k]["Name"]] = attr[k]["Value"];
@@ -106,12 +126,13 @@ module.exports = function(sdb) {
 				var model = {};
 				var attr = data["Item"]["Attribute"];
 				
-				if( attr["Name"] == "json" ){ 	
+				model[attr["Name"]] = JSON.parse( attr["Value"] );
+				/*if( attr["Name"] == "json" ){ 	
 					// parse as a json file
 					model = JSON.parse( attr["Value"] );
 				} else {
 					model[attr["Name"]] = attr["Value"];
-				}
+				}*/
 				
 				// ovewrite any model id present with the Attribute Name
 				model.id  = data["Item"]["Name"];
@@ -138,7 +159,7 @@ module.exports = function(sdb) {
 		// create the domain (if not availabe)
 		sdb.call("CreateDomain", { DomainName: req.backend }, function(err, result) {
             if (err) return next(err);
-			console.log(JSON.stringify(result));
+			//console.log(JSON.stringify(result));
 		});
         var crud = {
             create: function() {
