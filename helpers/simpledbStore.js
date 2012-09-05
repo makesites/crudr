@@ -90,9 +90,13 @@ module.exports = function(sdb) {
 				// deconstruct the response to an array
 				var collection = [];
 			
+				console.log(data["Item"]);
+				
 				for( i in data["Item"] ){
+					
 					var model = {};
-					var attr = data[i]["Attribute"];
+					//var attr = data["Item"][i]["Attribute"];
+					var attr = data["Item"][i];
 					
 					// parse as independent attributes 
 					var key = "";	
@@ -104,6 +108,25 @@ module.exports = function(sdb) {
 								model[key] = 0;
 							break;
 							case "Value":
+								/*
+								var attr = data["Item"]["Attribute"];
+								var attr = data["Item"]["Attribute"];
+				
+								for (var i in attr) {
+									try{
+										model[attr[i]["Name"]] = JSON.parse( attr[i]["Value"] );
+									} catch(err) {
+										// output err.message ?
+										model[attr[i]["Name"]] = attr[i]["Value"];
+									}
+								}
+				
+								try{
+									model[attr[i]["Name"]] = JSON.parse( attr[i]["Value"] );
+								} catch(err) {
+									// output err.message ?
+									model[attr[i]["Name"]] = attr[i]["Value"];
+								}
 								//if( key == "json" ){ 
 								// parse all attributes as json
 									//console.log(attr[k]);
@@ -112,6 +135,7 @@ module.exports = function(sdb) {
 								//} else {
 								//	model[key] = attr[k];
 								//}
+								*/
 							break;
 						}
 						//model[attr[k]["Name"]] = attr[k]["Value"];
@@ -123,16 +147,18 @@ module.exports = function(sdb) {
 				}
 				
 			} else {
+				
 				var model = {};
 				var attr = data["Item"]["Attribute"];
 				
-				model[attr["Name"]] = JSON.parse( attr["Value"] );
-				/*if( attr["Name"] == "json" ){ 	
-					// parse as a json file
-					model = JSON.parse( attr["Value"] );
-				} else {
-					model[attr["Name"]] = attr["Value"];
-				}*/
+				for (var i in attr) {
+					try{
+						model[attr[i]["Name"]] = JSON.parse( attr[i]["Value"] );
+					} catch(err) {
+						// output err.message ?
+						model[attr[i]["Name"]] = attr[i]["Value"];
+					}
+				}
 				
 				// ovewrite any model id present with the Attribute Name
 				model.id  = data["Item"]["Name"];
