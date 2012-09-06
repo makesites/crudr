@@ -84,61 +84,29 @@ module.exports = function(sdb) {
 			if( typeof(data["Item"]) == "undefined"){ 
 				return false;
 			}
-			
+				
 			if( data["Item"] instanceof Array ){ 
 			
 				// deconstruct the response to an array
 				var collection = [];
 			
-				console.log(data["Item"]);
-				
 				for( i in data["Item"] ){
 					
 					var model = {};
-					//var attr = data["Item"][i]["Attribute"];
-					var attr = data["Item"][i];
+					var attr = data["Item"][i]["Attribute"];
+					//var attr = data["Item"][i];
 					
 					// parse as independent attributes 
 					var key = "";	
 					for( k in attr ){
 						
-						switch(k){
-							case "Name":
-								key = attr[k];
-								model[key] = 0;
-							break;
-							case "Value":
-								/*
-								var attr = data["Item"]["Attribute"];
-								var attr = data["Item"]["Attribute"];
-				
-								for (var i in attr) {
-									try{
-										model[attr[i]["Name"]] = JSON.parse( attr[i]["Value"] );
-									} catch(err) {
-										// output err.message ?
-										model[attr[i]["Name"]] = attr[i]["Value"];
-									}
-								}
-				
-								try{
-									model[attr[i]["Name"]] = JSON.parse( attr[i]["Value"] );
-								} catch(err) {
-									// output err.message ?
-									model[attr[i]["Name"]] = attr[i]["Value"];
-								}
-								//if( key == "json" ){ 
-								// parse all attributes as json
-									//console.log(attr[k]);
-									model = JSON.parse( attr[k] );
-									//console.log(model);
-								//} else {
-								//	model[key] = attr[k];
-								//}
-								*/
-							break;
+						try{
+							model[attr[k]["Name"]] = JSON.parse( attr[k]["Value"] );
+						} catch(err) {
+							// output err.message ?
+							model[attr[k]["Name"]] = attr[k]["Value"];
 						}
-						//model[attr[k]["Name"]] = attr[k]["Value"];
+						
 					}
 					// ovewrite any model id present with the Attribute Name
 					model.id  = data["Item"][i]["Name"];
