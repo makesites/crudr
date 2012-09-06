@@ -1,6 +1,6 @@
 {
   "name": "crudr",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Open source module for socket-enabled CRUD operations in Node.js",
   "author": "makesites",
   "contributors": [
@@ -10,8 +10,8 @@
   "keywords": ["node.js", "crud", "api"], 
   "main": "./index.js",
   "engines": {
-    "node": ">0.4.x"
-  }, 
+    "node": "0.6.x"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/makesites/crudr"
