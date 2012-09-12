@@ -10,14 +10,11 @@ module.exports = config = {
 	}, 
 	"path" : "/data", 
 	"domain_prefix" : "", 
-	/*
 	"routes" : {
-		"create" : "/crudr/create", 
-		"read" : "/crudr/read", 
-		"update" : "/crudr/update", 
-		"delete" : "/crudr/delete"
+		"oauth" : "/oauth", 
+		"rest" : "/data", 
+		"client": "/crudr/client.js", 
 	}, 
-	*/
 	"action" : {
 		"register" : "/crudr/register", 
 		"reset" : "/crudr/reset"
