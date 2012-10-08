@@ -22,7 +22,7 @@ On the server:
 
 On the client:
 ```
-	<script src="/client.js"></script>
+	<script src="/crudr/client.js"></script>
     
 	<script>
 	crudr.connect( key, options, function(){ 
@@ -73,14 +73,14 @@ event name on the server.
 	crudr.listen(app, options, { event: 'myevent' });
 ```
 
-## Backends and Middleware
+## Backends
 
 Backends are stacks of composable middleware (inspired by Connect) that are responsible
 for handling sync requests and responding appropriately.  Each middleware is a function
 that accepts request and response objects (and optionally a function that can be called
 to continue down the stack).  A middleware will generally either return a result by
-calling `end` on the response object or pass control downward.  For example, let's add a
-logger middleware to our backend:
+calling `end` on the response object or pass control downward.  For example, to add a
+logger to our backend:
 
     var backend = crudr.createBackend();
     backend.use(function(req, res, next) {
@@ -90,10 +90,10 @@ logger middleware to our backend:
         next();
     });
     
-    backend.use(crudr.middleware.memoryStore());
+    backend.use(crudr.helpers.memoryStore());
     
-A request object will contain the following components (in addition to those set by
-various middleware):
+A request object will contain the following objects (in addition to those set by
+the various middleware):
 
 * `method`: the sync method (`create`, `read`, `update`, or `delete`)
 * `model`: the model object to by synced
@@ -101,8 +101,7 @@ various middleware):
 * `backend`: name of the backend responsible for handling the request
 * `socket`: the client socket that initiated the request
     
-Middleware can also be applied to only particular types of requests by passing the desired
-contexts to `use`:
+We can also target only particular types of requests by passing the desired contexts to `use`:
 
     backend.use('create', 'update', 'delete', function(req, res, next) {
         if (isAuthorized(req)) {
@@ -123,8 +122,7 @@ Or alternatively by using one of the four helper methods (`create`, `read`, `upd
     });
     
 If the bottom of the middleware stack is reached before a result is returned then the requested
-model is returned by default: `res.end(req.model)`.  Look in the `middleware` directory for more
-examples.
+model is returned by default: `res.end(req.model)`. 
 
 Clients are automatically notified of events triggered by other clients, however, there may
 be cases where other server-side code needs to make updates to a model outside of a backend
@@ -143,9 +141,9 @@ For example:
     
 ## Customizing
 
-In addition to middleware, the behavior of Backbone.IO can be customized via standard Socket.IO
+In addition to middleware, the behavior of CRUDr can be customized via standard Socket.IO
 mechanisms.  The object returned from the call to `listen` is the Socket.IO object and can be
-manipulated further.  See http://socket.io for more details.
+manipulated further.  See [http://socket.io](http://socket.io) for more details.
 
 ## Tests
 
@@ -160,11 +158,13 @@ Run the test suite:
 
 ## Constributors
 
-*	Makis Tracend <makis@makesit.es> 
-[github](http://github.com/tracend/ "Github account")
-[website](http://makesites.org/ "Make Sites .Org")
+*	Makis Tracend
+[github](http://github.com/tracend "Github account")
+*	Lyndel Thomas
+[github](https://github.com/ryndel "Github account")
+*	Scott Nelson
+[github](https://github.com/scttnlsn "Github account")
 
-based on the structure of backbone.io by Scott Nelson
 
 ## License 
 
