@@ -1,13 +1,25 @@
-var express = require('express');
-var crudr = require('../lib/index');
+var express = require("express"),
+	crudr = require("crudr"), // Include CRUDr lib
+	http = require("http"); 
+	
+var app = express();
+var server = http.createServer();
 
-var app = express.createServer();
-app.use(express.static(__dirname));
+// override default config
+var config = {
+  "backends" : {
+      "test" : "memoryStore"
+  }
+}
 
-app.listen(3000);
-console.log('http://localhost:3000/');
+// setup options
+var options = {
+    config: config,
+    app: app, 
+    server: server
+};
 
-var messages = crudr.createBackend();
-messages.use(crudr.middleware.memoryStore());
+// initialize CRUDr
+crudr.listen(options);
 
-crudr.listen(app, { messages: messages });
+server.listen(80);
