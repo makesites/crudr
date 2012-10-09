@@ -47,31 +47,40 @@ When a model is synced with a particular backend, the backend will trigger event
 on collections (across multiple clients) that share the backend.  For example, we
 could keep collections synced in realtime with the following event bindings:
 
+var Model;
+
+Model.backend = "{{name}}";
+
+Model.backend = buildBackend( Model );
+
+
 ```
 	var self = this;
 	
-	this.bind('backend:create', function(model) {
-	self.add(model);
-	});
-	this.bind('backend:update', function(model) {
-	self.get(model.id).set(model);
-	});
-	this.bind('backend:delete', function(model) {
-	self.remove(model.id);
-	});
+	element.addEventListener('{{name}}:create', function(e) {
+		var data = e.response;
+	}, false);
+	element.addEventListener('{{name}}:update', function(e) {
+		var data = e.response;
+	}, false);
+	element.addEventListener('{{name}}:delete', function(e) {
+		var data = e.response;
+	}, false);
 ```
 
-In addition to `backend:create`, `backend:read`, `backend:update`, and `backend:delete`
-events, a generic `backend` event is also triggered when a model is synced.
+In addition to `{{name}}:create`, `{{name}}:read`, `{{name}}:update`, and `{{name}}:delete`
+events, a generic `{{name}}` event is also triggered when a model is synced.
 ```	
-	this.bind('backend', function(method, model) {
-	// Method will be one of create, read, update, or delete
+	element.addEventListener('{{name}}', function(e) {
+		// Method will be one of create, read, update, or delete
+		var method = e.method;
+		var data = e.response;
 	});
 ```   
 The event prefix `backend` is used by default but this can be customized by setting the
 event name on the server.
 ```
-	options.event = 'myevent';
+	options.event = '{{name}}';
 	crudr.listen(options);
 ```
 More information on the [initialization options](https://github.com/makesites/crudr/wiki/Initialization-Options) is available [at the wiki](https://github.com/makesites/crudr/wiki/Initialization-Options)
