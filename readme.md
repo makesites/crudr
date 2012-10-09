@@ -44,15 +44,21 @@ On the client:
 ## Events
 
 When a model is synced with a particular backend, the backend will trigger events
-on collections (across multiple clients) that share the backend.  For example, we
-could keep collections synced in realtime with the following event bindings:
+on the object (across multiple clients) that share the backend. 
 
+To initialize the binding logic we create a backend key on the object of specific Model we are interested in
+
+
+For example, 
+
+```
 var Model;
-
+...
 Model.backend = "{{name}}";
-
 Model.backend = buildBackend( Model );
+```
 
+We can keep data synced in realtime with the following event bindings:
 
 ```
 	var self = this;
