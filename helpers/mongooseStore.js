@@ -11,10 +11,15 @@ module.exports = function(Model) {
             },
             
             read: function() {
-                if (req.model._id) {
-                    Model.findById(req.model._id, callback);
+				// "normalize" to what MongoDB expects
+				if (req.model.id) req.model._id = req.model.id;
+				
+				if (req.model._id) {
+					// model
+                   Model.findOne({ _id: req.model._id }, callback);
                 } else {
-                    Model.find(callback);
+					// collection
+                    Model.find(req.model).exec(callback);
                 }
             },
             
