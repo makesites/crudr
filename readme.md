@@ -13,11 +13,11 @@ __Open source module for socket-enabled CRUD operations in Node.js__
 On the server:
 ```
 	var http = require('http'), 
-	crud = require('crudr'), 
+	crudr = require('crudr'), 
 	app = http.createServer(),     
 	
-	app.listen(3000);
-	crudr.listen(app, options);
+	app.listen(80);
+	crudr.listen(options);
 ```
 
 On the client:
@@ -70,8 +70,10 @@ events, a generic `backend` event is also triggered when a model is synced.
 The event prefix `backend` is used by default but this can be customized by setting the
 event name on the server.
 ```
-	crudr.listen(app, options, { event: 'myevent' });
+	options.event = 'myevent';
+	crudr.listen(options);
 ```
+More information on the [initialisation options](https://github.com/makesites/crudr/wiki/Initialisation-Options) is available [at the wiki](https://github.com/makesites/crudr/wiki/Initialisation-Options)
 
 ## Backends
 
