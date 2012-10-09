@@ -73,7 +73,7 @@ event name on the server.
 	options.event = 'myevent';
 	crudr.listen(options);
 ```
-More information on the [initialisation options](https://github.com/makesites/crudr/wiki/Initialisation-Options) is available [at the wiki](https://github.com/makesites/crudr/wiki/Initialisation-Options)
+More information on the [initialization options](https://github.com/makesites/crudr/wiki/Initialization-Options) is available [at the wiki](https://github.com/makesites/crudr/wiki/Initialization-Options)
 
 ## Backends
 
