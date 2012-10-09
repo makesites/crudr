@@ -35,7 +35,8 @@ On the client:
 ## Dependencies 
 
 - Socket.io
-- Express
+- Express (only for uri routes)
+- Underscore
 - Nconf
 
 
