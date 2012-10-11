@@ -50,32 +50,22 @@
 					} 
 				});
 				
-				
-				/*
-				var evt = document.createEvent(event);
-					evt.initEvent(event,true,true); 
-					evt.method = method; 
-					evt.data = data; 
-					collection.dispatchEvent(evt);
-				*/
 			});
 			
 		}
 		
 		function loadData(){
 			
-			//setTimeout(function(){ 
 				// sync with crudr
 				var req = {
 					method: "read", 
 					model: {}
 				};
-				//console.log("load");
+				
 				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
 						//console.log( response );
 					} 
 				});
-			//}, 8000);
 			
 		}
 		
@@ -86,23 +76,16 @@
 				
 				var message = new Message();
 				
+				model = buildBackend( message );
+				
 				setupEvents();
 				
 				setupTriggers();
 				
-				//setTimeout(function(){ 
-					model = buildBackend( message );
-					
-					loadData();
-					
-				//}, 2000);
+				loadData();
 				
 			});
 			
-			/*
-			crudr.on("", { auth: false }, function( response ){
-			});
-			*/
 			
         });
     </script>
