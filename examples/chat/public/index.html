@@ -1,0 +1,119 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script src="/crudr/client.js"></script>
+    
+    <script>
+		// variables
+		var chat, model, el;
+		// model
+        var Message = function(){
+			return {
+            	data: "",
+				backend: "test", 
+				el: chat
+			}
+        };
+    
+		function setupEvents(){
+			
+			chat.addEventListener('test:create', function( e ) {
+				//console.log("create");
+				var data = e.response.data;
+				$("#chat").append("<li>"+data+"</li>");
+			}, false);
+			chat.addEventListener('test:read', function( e ) {
+				//foreach
+				var list = e.response;
+				for(i in list){
+					$("#chat").append("<li>"+list[i].data+"</li>");
+				}
+				
+			}, false);
+			
+		}
+        
+		function setupTriggers(){
+			
+			$(".send").click(function(){
+				var text = $(".message").val();
+				// add to the chat
+				$("#chat").append("<li>"+text+"</li>");
+				// sync with crudr
+				var req = {
+					method: "create",
+					model: { data : text },
+					options: null
+				};
+				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
+						//console.log( response );
+					} 
+				});
+				
+				
+				/*
+				var evt = document.createEvent(event);
+					evt.initEvent(event,true,true); 
+					evt.method = method; 
+					evt.data = data; 
+					collection.dispatchEvent(evt);
+				*/
+			});
+			
+		}
+		
+		function loadData(){
+			
+			//setTimeout(function(){ 
+				// sync with crudr
+				var req = {
+					method: "read", 
+					model: {}
+				};
+				//console.log("load");
+				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
+						//console.log( response );
+					} 
+				});
+			//}, 8000);
+			
+		}
+		
+        $(function() {
+			chat = document.getElementById("chat");
+            	
+			crudr.connect("", { auth: false }, function( response ){
+				
+				var message = new Message();
+				
+				setupEvents();
+				
+				setupTriggers();
+				
+				//setTimeout(function(){ 
+					model = buildBackend( message );
+					
+					loadData();
+					
+				//}, 2000);
+				
+			});
+			
+			/*
+			crudr.on("", { auth: false }, function( response ){
+			});
+			*/
+			
+        });
+    </script>
+    
+</head>
+<body>
+    <h1>Chat</h1>
+    <ul id="chat"></ul>
+    
+    <input class="message" type="text">
+    <input class="send" type="submit" value="Send">
+    
+</body>
+</html>
