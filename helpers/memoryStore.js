@@ -12,14 +12,14 @@ module.exports = function() {
             },
             
             read: function() {
-                if (req.model.id) {
+				if (req.model.id) {
                     res.end(models[req.model.id]);
                 } else {
                     var values = [];
                     for (var id in models) {
                         values.push(models[id])
                     }
-                    res.end(values);
+					res.end(values);
                 }
             },
             
