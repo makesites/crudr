@@ -8,7 +8,6 @@ module.exports = config = {
 	"oauth" : {
 		"authorize" : "/oauth/authorize"
 	}, 
-	"path" : "/data", 
 	"domain_prefix" : "", 
 	"routes" : {
 		"oauth" : "/oauth", 
