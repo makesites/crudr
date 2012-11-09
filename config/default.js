@@ -5,13 +5,11 @@ module.exports = config = {
 	"routes" : {
 		"oauth" : "/oauth", 
 		"rest" : "/data", 
-		"client": "/crudr/client.js", 
+		"client": "/crudr/client.js" 
 	}, 
 	"action" : {
 		"register" : "/crudr/register", 
 		"reset" : "/crudr/reset"
 	}, 
-	"backends" : { 
-		"mybackend" : "memoryStore"
-	}
+	"backends" : {}
 }

@@ -1,13 +1,13 @@
 module.exports = function(Model) {
     return function(req, res, next) {
         var callback = function(err, result) {
-            if (err) return next(err);
-            res.end(result);
+			if (err) return next(err);
+			res.end(result);
         };
         
         var crud = {
             create: function() {
-                Model.create(req.model, callback);
+				Model.create(req.model, callback);
             },
             
             read: function() {
@@ -19,7 +19,7 @@ module.exports = function(Model) {
                    Model.findOne({ _id: req.model._id }, callback);
                 } else {
 					// collection
-                    Model.find(req.model).exec(callback);
+					Model.find(req.model, callback);
                 }
             },
             
