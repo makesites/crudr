@@ -11,5 +11,6 @@ module.exports = config = {
 		"register" : "/crudr/register", 
 		"reset" : "/crudr/reset"
 	}, 
-	"backends" : {}
+	"backends" : {},
+	"scope" : {}
 }
