@@ -19,7 +19,12 @@ module.exports = function(Model) {
                    Model.findOne({ _id: req.model._id }, callback);
                 } else {
 					// collection
-					Model.find(req.model, callback);
+					// - use a scope if available
+					if(req.scope){ 
+						Model.find(req.model, req.scope, callback);
+					} else {
+						Model.find(req.model, callback);
+					}
                 }
             },
             
