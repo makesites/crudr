@@ -3,12 +3,17 @@
 __Open source module for socket-enabled CRUD operations in Node.js__
 
 
+## Features
+
+* Authentication compatible with OAuth2 (using middleware) 
+
+
 ## Install
+```
+	npm install crudr
+```
 
-    npm install crudr
-
-
-## Example
+## Usage
 
 On the server:
 ```
@@ -23,11 +28,11 @@ On the server:
 On the client:
 ```
 	<script src="/crudr/client.js"></script>
-    
+	
 	<script>
-	crudr.connect( key, options, function(){ 
-	// .. initiate app
-	});
+		crudr.connect( options, function(){ 
+			// .. initiate app
+		});
 	</script>
 	
 ```
@@ -37,7 +42,6 @@ On the client:
 - Socket.io
 - Express (only for uri routes)
 - Underscore
-- Nconf
 
 
 
