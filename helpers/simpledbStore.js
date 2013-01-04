@@ -21,7 +21,7 @@ module.exports = function(sdb) {
 			//console.log(err);
 			if (err) return next(err);
             //console.log(result);
-			res.end( JSON.stringify( req.model ));
+			res.end( JSON.stringify( result ) );
         };
         
 		var createQuery = function(model, options){
@@ -151,10 +151,12 @@ module.exports = function(sdb) {
 		  console.log(JSON.stringify(result));
 		});*/
 		// create the domain (if not availabe)
+		/*
 		sdb.call("CreateDomain", { DomainName: req.backend }, function(err, result) {
             if (err) return next(err);
 			//console.log(JSON.stringify(result));
 		});
+		*/
         var crud = {
             create: function() {
                 
@@ -177,8 +179,15 @@ module.exports = function(sdb) {
 				sdb.call("Select", { SelectExpression: query }, function(err, result) {
 					if (err) return next(err);
 					var response = createResponse( result["SelectResult"] );
-					if(!response) response = req.model;
-					res.end( JSON.stringify( response  ));
+					// pass as an array if no id requested
+					// convert to an array if returning a single object
+					if ( (typeof req.model.id == "undefined") && !(response instanceof Array) ){
+						response = [response];
+					}
+					//console.log( JSON.stringify( response ) );
+					callback(err, response);
+					//if(!response) response = req.model;
+					//res.end( JSON.stringify( response ) );
 				});
 				
             },
