@@ -1,7 +1,7 @@
 {
   "name": "crudr",
-  "version": "0.2.1",
-  "description": "Open source module for socket-enabled CRUD operations in Node.js",
+  "version": "0.2.3",
+  "description": "CRUD operations on persistent connection stores",
   "author": "makesites",
   "contributors": [
     { "name": "Makis Tracend", "email": "makis@makesit.es" }
@@ -10,7 +10,7 @@
   "keywords": ["node.js", "crud", "api"], 
   "main": "./index.js",
   "engines": {
-    "node": ">0.6.x"
+    "node": "~0.8.x"
   },
   "repository": {
     "type": "git",
@@ -26,12 +26,12 @@
     }
   ], 
   "dependencies": {
-	"socket.io": ">= 0.8.7", 
-    "underscore": "1.x"
+    "socket.io": "~0.9.x", 
+    "underscore": "~1.4.x"
   }, 
   "devDependencies": {
-	"express": ">= 2.5.0",
-	"mocha": ">= 0.3.6",
-	"sinon": ">= 1.2.0"
+	"express": "~3.0.x",
+	"mocha": "~0.x",
+	"sinon": "~1.x"
   }
 }
