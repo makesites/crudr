@@ -21,7 +21,7 @@ module.exports = function(sdb) {
 			//console.log(err);
 			if (err) return next(err);
             //console.log(result);
-			res.end( JSON.stringify( result ) );
+			res.end( result );
         };
         
 		var createQuery = function(model, options){
@@ -159,12 +159,16 @@ module.exports = function(sdb) {
 		*/
         var crud = {
             create: function() {
-                
+                // create a new id 
 				if( typeof( req.model.id ) == "undefined" ) req.model.id = (new Date).getTime();
 			
 				var query = createQuery( req.model, { json: true });
 				
-				sdb.call("PutAttributes", query, callback);
+				sdb.call("PutAttributes", query, function(err, result) {
+					if (err) return callback(err);
+					// return the data back to the client
+					callback(err, req.model);
+				});
 				
             },
             
@@ -177,14 +181,13 @@ module.exports = function(sdb) {
 				}
 				
 				sdb.call("Select", { SelectExpression: query }, function(err, result) {
-					if (err) return next(err);
+					if (err) return callback(err);
 					var response = createResponse( result["SelectResult"] );
 					// pass as an array if no id requested
 					// convert to an array if returning a single object
 					if ( (typeof req.model.id == "undefined") && !(response instanceof Array) ){
 						response = [response];
 					}
-					//console.log( JSON.stringify( response ) );
 					callback(err, response);
 					//if(!response) response = req.model;
 					//res.end( JSON.stringify( response ) );
@@ -193,22 +196,30 @@ module.exports = function(sdb) {
             },
             
             update: function() {
-                
-                if( typeof( req.model.id ) == "undefined" ) req.model.id = (new Date).getTime();
+                // exit if there's no data id
+				if( typeof( req.model.id ) == "undefined" ) res.end();
 				
 				var query = createQuery( req.model, { replace : true, json: true });
 				
-				sdb.call("PutAttributes", query, callback);
+				sdb.call("PutAttributes", query, function(err, result) {
+					if (err) return callback(err);
+					// return the data back to the client
+					callback(err, req.model);
+				});
 				
             },
             
             delete: function() {
-				
-				if( typeof( req.model.id ) == "undefined" ) req.model.id = (new Date).getTime();
+				// exit if there's no data id
+				if( typeof( req.model.id ) == "undefined" ) res.end();
 				
 				var query = createQuery( req.model, { json: true, noAttr: true } );
 				
-				sdb.call("DeleteAttributes", query, callback);
+				sdb.call("DeleteAttributes", query, function(err, result) {
+					if (err) return callback(err);
+					// return the data back to the client
+					callback(err, req.model);
+				});
 				
             }
         };
