@@ -1,6 +1,6 @@
 {
   "name": "crudr",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "CRUD operations on persistent connection stores",
   "author": "makesites",
   "contributors": [
