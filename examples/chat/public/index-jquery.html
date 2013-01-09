@@ -12,20 +12,27 @@
 		//
 		function setupEvents(){
 			
-			chat.addEventListener(backend +':create', function( e ) {
-				//console.log("create");
-				var data = e.response.data;
-				$("#chat").append("<li>"+data+"</li>");
-			}, false);
-			chat.addEventListener(backend +':read', function( e ) {
-				//foreach
-				//console.log("read");
-				var list = e.response;
+			$(chat).on(backend +':create', function() {
+				console.log("create");
+				var list = arguments;
+				// remove the first item (the event)
+				delete list[0];
+				for(i in list){
+					$("#chat").append("<li>"+list[i].data+"</li>");
+				}
+			});
+			
+			$(chat).on(backend +':read', function() {
+				// jQuery has is passing the array on item at a time :P 
+				console.log("read");
+				var list = arguments;
+				// remove the first item (the event)
+				delete list[0];
 				for(i in list){
 					$("#chat").append("<li>"+list[i].data+"</li>");
 				}
 				
-			}, false);
+			});
 			
 		}
         
@@ -74,7 +81,7 @@
 				
 				model = crudr.subscribe({
 							name: backend, 
-							el: chat
+							el: $(chat)
 					});
 				
 				setupEvents();
