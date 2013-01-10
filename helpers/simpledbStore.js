@@ -184,7 +184,7 @@ module.exports = function(sdb) {
 					if (err) return callback(err);
 					var response = createResponse( result["SelectResult"] );
 					// pass as an array if no id requested
-					// convert to an array if returning a single object
+					// convert to an array if returning a single object (for no id)
 					if ( (typeof req.model.id == "undefined") && !(response instanceof Array) ){
 						response = [response];
 					}
