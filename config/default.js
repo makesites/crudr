@@ -12,5 +12,6 @@ module.exports = config = {
 		"reset" : "/crudr/reset"
 	}, 
 	"backends" : {},
-	"scope" : {}
+	"scope" : {},
+	"namespace" : false
 }
