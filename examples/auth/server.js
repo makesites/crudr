@@ -1,38 +1,14 @@
 var express = require("express"),
-	crudr = require("crudr"), // Include CRUDr lib
+	crudr = require("../../index"), // Include CRUDr lib
 	http = require("http"); 
 	
 var app = express();
-var server = http.createServer();
-
-var sessions = new express.session.MemoryStore();
-
-app.use(express.cookieParser());
-app.use(express.session({ secret: 'mysecret', store: sessions }));
-
-// Main routes
-app.get('/login', function(req, res) {
-    req.session.user = 'myuser';
-    res.redirect('/');
-});
-
-app.get('/logout', function(req, res) {
-    req.session.user = undefined;
-    res.redirect('/');
-});
-
-var auth = function(req, res, next) {
-    if (!req.session.user) {
-        next(new Error('Unauthorized'));
-    } else {
-        next();
-    }
-};
+var server = http.createServer(app);
 
 // override default config
 var config = {
   "backends" : {
-      "messages" : "memoryStore"
+      "test" : "memoryStore"
   }
 }
 
@@ -40,17 +16,16 @@ var config = {
 var options = {
     config: config,
     app: app, 
-    server: server, 
-	event: { messages: messages }
+    server: server
 };
 
 // initialize CRUDr
 crudr.listen(options);
 
-// post-init setup
-crudr.db["messages"].use(crudr.helpers.cookieParser());
-crudr.db["messages"].use(crudr.helpers.session({ store: sessions }));
-crudr.db["messages"].use('create', 'update', 'delete', auth);
-
-
+// map  static folder
+app.use(express.static(__dirname + '/public'));
+//app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+//app.use(express.logger());
+//app.use(app.router);
+  
 server.listen(80);

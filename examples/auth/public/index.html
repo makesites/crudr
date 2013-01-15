@@ -1,120 +1,105 @@
 <html>
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script src="/client.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://localhost:4000/client.js"></script>
     
     <script>
-        var Message = Backbone.Model.extend({
-            
-            initialize: function() {
-                this.bind('error', function(model, err) {
-                    alert(err.message);
-                });
-            }
-            
-        });
-    
-        var Messages = Backbone.Collection.extend({
-            
-            // Specify the backend with which to sync
-            backend: 'messages',
+		// variables
+		var chat, model, el;
+		// CHANGE THIS with your own backend...
+		var backend = "demo_demo_chat";
+		var auth =  {
+			key : "37fff53aeb6094f55b0328082aaf1de7", 
+			//secret : "$2a$10$lBY2DZ4l/Goow9BnznPLBuTTjM8nlOGHXgcZjO59v86uMntYIzjQy", 
+			log : true
+		};
+		//
+		function setupEvents(){
+			
+			chat.addEventListener(backend +':create', function( e ) {
+				//console.log("create");
+				var data = e.response.data;
+				$("#chat").append("<li>"+data+"</li>");
+			}, false);
+			chat.addEventListener(backend +':read', function( e ) {
+				//foreach
+				//console.log("read");
+				var list = e.response;
+				for(i in list){
+					$("#chat").append("<li>"+list[i].data+"</li>");
+				}
+				
+			}, false);
+			
+		}
         
-            model: Message,
-        
-            initialize: function() {
-                // Setup default backend bindings
-                // (see lib/browser.js for details).
-                this.bindBackend();
-            }
-        
-        });
-        
-        var MessageView = Backbone.View.extend({
-            
-            tagName: 'li',
-            
-            events: {
-                'click .delete': 'delete'
-            },
-            
-            initialize: function() {
-                _.bindAll(this, 'render', 'delete');
-                
-                this.template = _.template($('#message-template').html());
-            },
-            
-            render: function() {
-                $(this.el).html(this.template(this.model.toJSON()));
-                return this;
-            },
-            
-            delete: function(e) {
-                e.preventDefault();
-                this.model.destroy();
-            }
-            
-        });
-    
-        var MessagesView = Backbone.View.extend({
-        
-            events: {
-                'click .send': 'send',
-                'keypress .message': 'keypress'
-            },
-        
-            initialize: function(options) {
-                _.bindAll(this, 'render', 'send', 'keypress');
-            
-                this.collection.bind('add', this.render);
-                this.collection.bind('change', this.render);
-                this.collection.bind('remove', this.render);
-                this.collection.bind('reset', this.render);
-                this.collection.fetch();
-                
-                this.template = _.template($('#messages-template').html());
-            },
-        
-            render: function() {
-                $(this.el).html(this.template());
-                
-                this.collection.each(function(message) {
-                    var view = new MessageView({ model: message });
-                    this.$('ul').append(view.render().el);
-                });
-                
-                return this;
-            },
-        
-            send: function() {
-                this.collection.create({ text: this.$('.message').val() });
-                this.$('.message').val('');
-            },
-            
-            keypress: function(e) {
-                if (e.which === 13) this.send();
-            }
-        
-        });
-        
+		function setupTriggers(){
+			
+			$(".send").click(function(){
+				var text = $(".message").val();
+				// add to the chat
+				$("#chat").append("<li>"+text+"</li>");
+				// sync with crudr
+				var req = {
+					method: "create",
+					model: { data : text },
+					options: null
+				};
+				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
+						//console.log( response );
+					} 
+				});
+				
+			});
+			
+		}
+		
+		function loadData(){
+			
+				// sync with crudr
+				var req = {
+					method: "read", 
+					model: {}
+				};
+				
+				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
+						//console.log( response );
+					} 
+				});
+			
+		}
+		
         $(function() {
-            window.messages = new Messages();
-            new MessagesView({ el: $('#messages'), collection: messages }).render();
+			chat = document.getElementById("chat");
+            
+			crudr.connect(auth, function( response ){
+				
+				//var message = new Message();
+				
+				model = crudr.subscribe({
+							name: backend, 
+							el: chat
+					});
+				
+				setupEvents();
+				
+				setupTriggers();
+				
+				loadData();
+				
+			});
+			
+			
         });
     </script>
     
-    <script id="message-template" type="text/template">
-        <%= text %>
-        <a class="delete" href="#">[x]</a>
-    </script>
-    
-    <script id="messages-template" type="text/template">
-        <input class="message" type="text">
-        <input class="send" type="submit" value="Send">
-        <ul></ul>
-    </script>
 </head>
 <body>
-    <h1>Messages</h1>
-    <div id="messages"></div>
+    <h1>Chat</h1>
+    <ul id="chat"></ul>
+    
+    <input class="message" type="text">
+    <input class="send" type="submit" value="Send">
+    
 </body>
 </html>
