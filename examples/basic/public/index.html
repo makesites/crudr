@@ -1,50 +1,18 @@
+<!doctype html>
 <html>
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-    <script src="/client.js"></script>
-    
-    <script>
-        var Message = function(){
-			
-			return {
-            	data: "",
-				backend: "backend"
-			}
-        };
-    
-		function setupEvents(element){
-			
-			element.addEventListener('{{name}}:create', function(e) {
-				var data = e.response;
-			}, false);
-			element.addEventListener('{{name}}:update', function(e) {
-				var data = e.response;
-			}, false);
-			element.addEventListener('{{name}}:delete', function(e) {
-				var data = e.response;
-			}, false);
-			
-		}
-        
-        $(function() {
-			var message = new Message();
-            setupEvents(message);
-        });
-    </script>
-    
-    <script id="message-template" type="text/template">
-        <%= text %>
-        <a class="delete" href="#">[x]</a>
-    </script>
-    
-    <script id="messages-template" type="text/template">
-        <input class="message" type="text">
-        <input class="send" type="submit" value="Send">
-        <ul></ul>
-    </script>
+    <script type="text/javascript" src="/crudr/client.js"></script>
 </head>
 <body>
-    <h1>Messages</h1>
-    <div id="messages"></div>
+    <h1>Welcome to CRUDr</h1>
+    <div>
+    	<p>CRUDr is not successfully initialized :)</p>
+    	<p>You can find the client-side lib at:</p>
+        <p><a href="./crudr/client.js">./crudr/client.js</a></p>
+    </div>
+    <div>
+    	<p>You can modify the path of the client.js by modifying the <a href="https://github.com/makesites/crudr/wiki/Configuration" rel="external">default configuration</a>.</p>
+    	<p>For more information on how to use the lib, look through the other examples or read the <a href="https://github.com/makesites/crudr/wiki" rel="external">online documentation</a>.</p>
+    </div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 var express = require("express"),
-	crudr = require("../../index"), // Include CRUDr lib
+	crudr = require("crudr"), // Include CRUDr lib
 	http = require("http"); 
 	
 var app = express();
@@ -22,10 +22,13 @@ var options = {
 // initialize CRUDr
 crudr.listen(options);
 
-// map  static folder
+// map static folder
 app.use(express.static(__dirname + '/public'));
-//app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-//app.use(express.logger());
-//app.use(app.router);
-  
+
+// post-init setup
+//crudr.db["messages"].use(crudr.helpers.cookieParser());
+//crudr.db["messages"].use(crudr.helpers.session({ store: sessions }));
+//crudr.db["messages"].use('create', 'update', 'delete', auth);
+
+
 server.listen(80);

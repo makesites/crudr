@@ -1,5 +1,5 @@
 var express = require("express"),
-	crudr = require("../../index"), // Include CRUDr lib
+	crudr = require("crudr"), // Include CRUDr lib
 	http = require("http"); 
 	
 var app = express();
@@ -9,7 +9,12 @@ var server = http.createServer(app);
 var config = {
   "backends" : {
       "test" : "memoryStore"
+  },
+  /* custom auth link:
+  "routes" : {
+	  "auth" : "auth"
   }
+  */
 }
 
 // setup options
@@ -24,8 +29,16 @@ crudr.listen(options);
 
 // map  static folder
 app.use(express.static(__dirname + '/public'));
-//app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-//app.use(express.logger());
-//app.use(app.router);
   
+// Authentication
+// - simplistic example to verify client
+app.get("/auth", function( req, res ){
+	// verify host
+	// create token
+	var access_token = "234tyh34567865432";
+	var expires_in = 3600; // an hour
+	// send response
+	res.send({ access_token: access_token, expires_in : expires_in });
+});
+
 server.listen(80);

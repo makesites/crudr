@@ -1,18 +1,18 @@
 <html>
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="http://localhost:8080/client.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="crudr/client.js"></script>
     
     <script>
 		// variables
-		var chat, model, el;
-		// CHANGE THIS with your own backend...
-		var backend = "demo_chat";
+		var model;
+		// CHANGE THIS with your own backend, matching the configuration in server.js
+		var backend = "test";
 		
 		//
 		function setupEvents(){
 			
-			$(chat).on(backend +':create', function() {
+			$("#chat").on(backend +':create', function() {
 				console.log("create");
 				var list = arguments;
 				// remove the first item (the event)
@@ -22,7 +22,7 @@
 				}
 			});
 			
-			$(chat).on(backend +':read', function() {
+			$("#chat").on(backend +':read', function() {
 				// jQuery has is passing the array on item at a time :P 
 				console.log("read");
 				var list = arguments;
@@ -49,7 +49,7 @@
 					options: null
 				};
 				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
-						//console.log( response );
+						console.log("response", response );
 					} 
 				});
 				
@@ -59,29 +59,29 @@
 		
 		function loadData(){
 			
-				// sync with crudr
-				var req = {
-					method: "read", 
-					model: {}
-				};
-				
-				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
-						//console.log( response );
-					} 
-				});
+			// sync with crudr
+			var req = {
+				method: "read", 
+				model: {}
+			};
+			
+			crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
+					//console.log( response );
+				} 
+			});
 			
 		}
 		
+		// on document ready...
         $(function() {
-			chat = document.getElementById("chat");
-            
+			
 			crudr.connect({ auth: false }, function( response ){
 				
 				//var message = new Message();
 				
 				model = crudr.subscribe({
 							name: backend, 
-							el: $(chat)
+							el: $("#chat")
 					});
 				
 				setupEvents();
@@ -98,7 +98,8 @@
     
 </head>
 <body>
-    <h1>Chat</h1>
+    <h1>jQuery messaging</h1>
+    <p>Similar example as the vanilla messaging, although now the events are driven by jQuery's event handler...</p>
     <ul id="chat"></ul>
     
     <input class="message" type="text">
