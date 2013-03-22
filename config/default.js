@@ -4,6 +4,7 @@ module.exports = config = {
 	"domain_prefix" : "", 
 	"routes" : {
 		"oauth" : "/oauth", 
+		"auth" : "auth", 
 		"rest" : "/data", 
 		"client": "/crudr/client.js" 
 	}, 
