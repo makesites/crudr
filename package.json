@@ -1,37 +1,37 @@
 {
-  "name": "crudr",
-  "version": "0.2.8",
-  "description": "CRUD operations on persistent connection stores",
-  "author": "makesites",
-  "contributors": [
-    { "name": "Makis Tracend", "email": "makis@makesit.es" }
-  ],
-  "homepage": "http://www.makesites.org/crudr", 
-  "keywords": ["node.js", "crud", "api"], 
-  "main": "./index.js",
-  "engines": {
-    "node": "~0.8.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/makesites/crudr"
-  },
-  "bugs": {
-    "url": "https://github.com/makesites/crudr/issues"
-  }, 
-  "licenses": [
-    {
-      "type": "Apache License, Version 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ], 
-  "dependencies": {
-    "socket.io": "~0.9.x", 
-    "underscore": "~1.4.x"
-  }, 
-  "devDependencies": {
-	"express": "~3.0.x",
-	"mocha": "~0.x",
-	"sinon": "~1.x"
-  }
+	"name": "crudr",
+	"version": "0.2.9",
+	"description": "CRUD operations on persistent connection stores",
+	"author": "makesites",
+	"contributors": [
+		{ "name": "Makis Tracend", "email": "makis@makesit.es" }
+	],
+	"homepage": "http://www.makesites.org/crudr", 
+	"keywords": ["node", "node.js", "crud", "api", "socket", "websocket"], 
+	"main": "index",
+	"engines": {
+		"node": "~0.8.x"
+	},
+	"repository": {
+	"type": "git",
+		"url": "https://github.com/makesites/crudr"
+	},
+	"bugs": {
+		"url": "https://github.com/makesites/crudr/issues"
+	}, 
+	"licenses": [
+		{
+		"type": "Apache License, Version 2.0",
+		"url": "http://www.apache.org/licenses/LICENSE-2.0"
+		}
+	], 
+	"dependencies": {
+		"socket.io": "~0.9.x", 
+		"underscore": "~1.4.x"
+	}, 
+	"devDependencies": {
+		"express": "~3.0.x",
+		"mocha": "~0.x",
+		"sinon": "~1.x"
+	}
 }
