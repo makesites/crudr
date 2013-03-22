@@ -188,9 +188,8 @@ Run the test suite:
 [github](https://github.com/scttnlsn "Github account")
 
 
-## License 
+## Credits 
 
-Distributed under the Apache License, Version 2.0
-http://www.apache.org/licenses/LICENSE-2.0
+Distributed by [Makesites.org](http://makesites.org)
 
-(read the LICENSE file for a full description) 
+Released under the [Apache License, Version 2.0](http://makesites.org/licenses/APACHE-2.0)
