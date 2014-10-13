@@ -6,8 +6,8 @@
 	"contributors": [
 		{ "name": "Makis Tracend", "email": "makis@makesit.es" }
 	],
-	"homepage": "http://www.makesites.org/crudr", 
-	"keywords": ["node", "node.js", "crud", "api", "socket", "websocket"], 
+	"homepage": "http://www.makesites.org/crudr",
+	"keywords": ["node", "node.js", "crud", "api", "socket", "websocket"],
 	"main": "index",
 	"engines": {
 		"node": "~0.8.x"
@@ -18,17 +18,17 @@
 	},
 	"bugs": {
 		"url": "https://github.com/makesites/crudr/issues"
-	}, 
+	},
 	"licenses": [
 		{
 		"type": "Apache License, Version 2.0",
 		"url": "http://www.apache.org/licenses/LICENSE-2.0"
 		}
-	], 
+	],
 	"dependencies": {
-		"socket.io": "~0.9.x", 
-		"underscore": "~1.4.x"
-	}, 
+		"socket.io": "1.1.0",
+		"underscore": "1.7.0"
+	},
 	"devDependencies": {
 		"express": "~3.0.x",
 		"mocha": "~0.x",
