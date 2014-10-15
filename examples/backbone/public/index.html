@@ -2,9 +2,9 @@
 <html>
 <head>
 	<!-- dependencies -->
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
 	<!-- backbone extension -->
 	<script type="text/javascript" src="//rawgit.com/backbone-api/crudr/master/backbone.crudr.js"></script>
 	<!-- CRUDr client lib -->
@@ -28,12 +28,6 @@
 			backend: 'test',
 
 			model: Message,
-
-			initialize: function() {
-				// Setup default backend bindings
-				// (see lib/client.js for details).
-				this.bindBackend();
-			}
 
 		});
 
@@ -73,10 +67,7 @@
 			initialize: function(options) {
 				_.bindAll(this, 'render', 'send', 'keypress');
 
-				this.collection.bind('add', this.render);
-				this.collection.bind('change', this.render);
-				this.collection.bind('remove', this.render);
-				this.collection.bind('reset', this.render);
+				this.collection.bind('add change remove reset', this.render);
 				this.collection.fetch();
 
 				this.template = _.template($('#messages-template').html());
