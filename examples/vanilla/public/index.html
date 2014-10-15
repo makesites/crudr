@@ -1,16 +1,26 @@
 <html>
 <head>
-    <script src="crudr/client.js"></script>
-    
-    <script>
+	<script src="crudr/client.js"></script>
+
+	<!-- events -->
+	<script>
 		// variables
-		var chat, model, el, message;
+		var chat, el, message;
 		// CHANGE THIS with your own backend, matching the configuration in server.js
 		var backend = "test";
-		
+
+		// generic callbacks
+		var callbacks = {
+			error: function(err){
+				console.log(err)
+			},
+			success: function( response ){
+				console.log( response );
+			}
+		};
 		//
 		function setupEvents(){
-			
+
 			chat.addEventListener(backend +':create', function( e ) {
 				//console.log("create");
 				var data = e.response.data;
@@ -23,84 +33,79 @@
 				for(i in list){
 					chat.appendChild( msg( list[i].data ) );
 				}
-				
+
 			}, false);
-			
+
 		}
-        
+
 		function sendMessage(){
-				
+
 				var text = message.value;
 				// add to the chat
 				chat.appendChild( msg(text) );
-				
+
 				// sync with crudr
 				var req = {
-					method: "create",
+					backend: backend,
 					model: { data : text },
-					options: null
+					//options: null
 				};
-				
-				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
-						console.log( response );
-					} 
-				});
-			
+
+				crudr.create(req, callbacks);
+
 		}
-		
+
 		function loadData(){
-			
+
 				// sync with crudr
 				var req = {
-					method: "read", 
+					backend: backend,
 					model: {}
 				};
-				
-				crudr.sync(model.socket, req, { error: function(err){ console.log(err) }, success: function( response ){ 
-						//console.log( response );
-					} 
-				});
-			
+
+				crudr.read(req, callbacks);
+
 		}
-		
+
 		function msg( text ){
 			var li = document.createElement("li");
 			li.innerHTML = text;
 			return li;
 		}
-		
-    </script>
-    
+
+	</script>
+
 </head>
 <body>
-    <h1>Vanilla messaging</h1>
-    <p>Simple example exchanging messages using vanilla javascript</p>
-    <ul id="chat"></ul>
-    
-    <input id="message" type="text">
-    <input class="send" type="submit" value="Send" onClick="return sendMessage()">
-    
-    
+	<h1>Vanilla messaging</h1>
+	<p>Simple example exchanging messages using vanilla javascript</p>
+	<ul id="chat"></ul>
+
+	<input id="message" type="text">
+	<input class="send" type="submit" value="Send" onClick="return sendMessage()">
+
+
+<!--initialize -->
 <script type="text/javascript">
 
 	chat = document.getElementById("chat");
 	message = document.getElementById("message");
-	
-	crudr.connect({ auth: false }, function( response ){
-		
+
+	crudr.connect({ auth: false, log: true }, function( response ){
+
 		//var message = new Message();
-		
-		model = crudr.subscribe({
-					name: backend, 
-					el: chat
-			});
-		
+
+		var model = crudr.subscribe({
+			name: backend,
+			el: chat
+		});
+
 		setupEvents();
-		
+
 		loadData();
-		
+
 	});
-			
+
 </script>
 </body>
 </html>

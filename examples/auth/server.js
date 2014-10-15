@@ -1,27 +1,27 @@
 var express = require("express"),
-	crudr = require("crudr"), // Include CRUDr lib
-	http = require("http"); 
-	
+	crudr = require("../../index"), // or as a module: crudr = require("crudr")
+	http = require("http");
+
 var app = express();
 var server = http.createServer(app);
 
 // override default config
 var config = {
-  "backends" : {
-      "test" : "memoryStore"
-  },
-  /* custom auth link:
-  "routes" : {
-	  "auth" : "auth"
-  }
-  */
+	"backends": {
+		"test": "memoryStore"
+	},
+	/* custom auth link:
+	"routes" : {
+		"auth" : "auth"
+	}
+	*/
 }
 
 // setup options
 var options = {
-    config: config,
-    app: app, 
-    server: server
+	config: config,
+	app: app,
+	server: server
 };
 
 // initialize CRUDr
@@ -29,7 +29,7 @@ crudr.listen(options);
 
 // map  static folder
 app.use(express.static(__dirname + '/public'));
-  
+
 // Authentication
 // - simplistic example to verify client
 app.get("/auth", function( req, res ){

@@ -1,50 +1,50 @@
 <!doctype html>
 <html>
 <head>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.2.4/json3.min.js"></script>
-    <script src="crudr/client.js"></script>
-    
-    <script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.2.4/json3.min.js"></script>
+	<script src="crudr/client.js"></script>
+
+	<script>
 		// variables
 		var auth =  {
-			key : "37fff53aeb6094f55b0328082aaf1de7", 
+			key : "37fff53aeb6094f55b0328082aaf1de7",
 			log : true
 		};
-        
+
 		function setupTrigger(){
-			
+
 			$(".send").click( initConnect );
-			
+
 		}
-		
+
 		function initConnect(){
-			
+
 			crudr.connect(auth, function( response ){
-				
+
 				alert("authentication completed");
-				
+
 			});
-			
+
 		}
-		
-        $(function() {
-			
+
+		$(function() {
+
 			setupTrigger();
-			
-        });
-		
-    </script>
-    
+
+		});
+
+	</script>
+
 </head>
 <body>
-    <h1>Authentication</h1>
-    <p>This is a specialized example, dealing only with the authentication portion of CRUDr</p>
-    <p>To get a better idea of what's happening you'll need to open the developer console.</p>
-    <p>As the state of the lib changes, you'll see related updates in the console.</p>
-    <p>Also helpful is the server.js, which contains an example response to the authentication request...</p>
+	<h1>Authentication</h1>
+	<p>This is a limited example, dealing only with the authentication portion of CRUDr</p>
+	<p>To get a better idea of what's happening you'll need to open the developer console.</p>
+	<p>As the state of the lib changes, you'll see related updates in the console.</p>
+	<p>Also helpful is the server.js, which contains an example response to the authentication request...</p>
 	<p>To start the authentication, click the button below:</p>
-    <input class="send" type="submit" value="Start!">
-    
+	<input class="send" type="submit" value="Start!">
+
 </body>
 </html>
