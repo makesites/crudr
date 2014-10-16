@@ -5,7 +5,7 @@
 	<!-- events -->
 	<script>
 		// variables
-		var chat, el, message;
+		var chat, el, db, message;
 		// CHANGE THIS with your own backend, matching the configuration in server.js
 		var backend = "test";
 
@@ -22,16 +22,18 @@
 		function setupEvents(){
 
 			chat.addEventListener(backend +':create', function( e ) {
-				//console.log("create");
-				var data = e.response.data;
+				//console.log("create", e.response);
+				var data = e.response.text;
 				chat.appendChild( msg( data ) );
 			}, false);
+
 			chat.addEventListener(backend +':read', function( e ) {
 				//foreach
-				//console.log("read");
+				//console.log("read", e.response);
 				var list = e.response;
+
 				for(i in list){
-					chat.appendChild( msg( list[i].data ) );
+					chat.appendChild( msg( list[i].text ) );
 				}
 
 			}, false);
@@ -45,25 +47,13 @@
 				chat.appendChild( msg(text) );
 
 				// sync with crudr
-				var req = {
-					backend: backend,
-					model: { data : text },
-					//options: null
-				};
-
-				crudr.create(req, callbacks);
+				db.create({ text: text }, callbacks);
 
 		}
 
 		function loadData(){
 
-				// sync with crudr
-				var req = {
-					backend: backend,
-					model: {}
-				};
-
-				crudr.read(req, callbacks);
+				db.read([], callbacks);
 
 		}
 
@@ -95,7 +85,7 @@
 
 		//var message = new Message();
 
-		var model = crudr.subscribe({
+		db = crudr.subscribe({
 			name: backend,
 			el: chat
 		});

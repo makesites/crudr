@@ -188,11 +188,12 @@ var crudr;
 
 		var promise = new Promise( el );
 
-		var backend = {
+		var options = {
 			name: name,
-			options: null,
 			ready: promise.add
 		};
+
+		var backend = setupBackend( options );
 
 		socket.emit('subscribe', { backend: name }, function(options) {
 			backend.options = options;
@@ -223,7 +224,6 @@ var crudr;
 
 			promise.resolve();
 		});
-
 
 		return backend;
 	};
@@ -296,6 +296,37 @@ var crudr;
 
 
 // Helpers (not available in the global namespace)
+
+// - setup a backend
+function setupBackend( options ){
+
+	// extend options
+	var req = options;
+	// crud
+	req.create = crud("create").bind(req);
+	req.read = crud("read").bind(req);
+	req.update = crud("update").bind(req);
+	req.delete = crud("delete").bind(req);
+	// is this needed?
+	req.options = null;
+	return req;
+}
+
+function crud( method ){
+
+	return function( data, callbacks){
+		//
+		var req = {
+			backend: this.name,
+			name: this.name,
+			model: data
+		};
+		// execute global crudr method
+		crudr[method](req, callbacks);
+	}
+
+}
+
 // - grouping callbacks
 function Promise (obj) {
 	var args = null;

@@ -5,6 +5,7 @@
 
 	<script>
 		// variables
+		var db;
 		// CHANGE THIS with your own backend, matching the configuration in server.js
 		var backend = "test";
 
@@ -26,7 +27,7 @@
 				// remove the first item (the event)
 				delete list[0];
 				for(i in list){
-					$("#chat").append("<li>"+list[i].data+"</li>");
+					$("#chat").append("<li>"+list[i].text+"</li>");
 				}
 			});
 
@@ -37,7 +38,7 @@
 				// remove the first item (the event)
 				delete list[0];
 				for(i in list){
-					$("#chat").append("<li>"+list[i].data+"</li>");
+					$("#chat").append("<li>"+list[i].text+"</li>");
 				}
 
 			});
@@ -51,13 +52,7 @@
 				// add to the chat
 				$("#chat").append("<li>"+text+"</li>");
 				// sync with crudr
-				var req = {
-					backend: backend,
-					model: { data : text },
-					//options: null
-				};
-
-				crudr.create(req, callbacks);
+				db.create({ text: text }, callbacks);
 
 			});
 
@@ -66,12 +61,7 @@
 		function loadData(){
 
 			// sync with crudr
-			var req = {
-				backend: backend,
-				model: {}
-			};
-
-			crudr.read(req, callbacks);
+			db.read([], callbacks);
 
 		}
 
@@ -82,7 +72,7 @@
 
 				//var message = new Message();
 
-				var model = crudr.subscribe({
+				db = crudr.subscribe({
 					name: backend,
 					el: $("#chat")
 				});
