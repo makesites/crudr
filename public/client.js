@@ -317,7 +317,6 @@ function crud( method ){
 	return function( data, callbacks){
 		//
 		var req = {
-			backend: this.name,
 			name: this.name,
 			model: data
 		};
