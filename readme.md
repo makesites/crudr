@@ -5,7 +5,7 @@ __Open source module for socket-enabled CRUD operations in Node.js__
 
 ## Features
 
-* Authentication compatible with OAuth2 (using middleware) 
+* Authentication compatible with OAuth2 (using middleware)
 
 
 ## Install
@@ -17,27 +17,27 @@ __Open source module for socket-enabled CRUD operations in Node.js__
 
 On the server:
 ```
-	var http = require('http'), 
-	crudr = require('crudr'), 
-	app = http.createServer(),     
-	
+	var http = require('http'),
+	crudr = require('crudr'),
+	app = http.createServer(),
+
 	app.listen(80);
 	crudr.listen(options);
 ```
 
 On the client:
 ```
-	<script src="/crudr/client.js"></script>
-	
+	<script src="/crudr.js"></script>
+
 	<script>
-		crudr.connect( options, function(){ 
+		crudr.connect( options, function(){
 			// .. initiate app
 		});
 	</script>
-	
+
 ```
 
-## Dependencies 
+## Dependencies
 
 - Socket.io
 - Express (only for uri routes)
@@ -48,12 +48,12 @@ On the client:
 ## Events
 
 When a model is synced with a particular backend, the backend will trigger events
-on the object (across multiple clients) that share the backend. 
+on the object (across multiple clients) that share the backend.
 
 To initialize the binding logic we create a backend key on the object of specific Model we are interested in
 
 
-For example, 
+For example,
 
 ```
 var Model;
@@ -66,7 +66,7 @@ We can keep data synced in realtime with the following event bindings:
 
 ```
 	var self = this;
-	
+
 	element.addEventListener('{{name}}:create', function(e) {
 		var data = e.response;
 	}, false);
@@ -80,13 +80,13 @@ We can keep data synced in realtime with the following event bindings:
 
 In addition to `{{name}}:create`, `{{name}}:read`, `{{name}}:update`, and `{{name}}:delete`
 events, a generic `{{name}}` event is also triggered when a model is synced.
-```	
+```
 	element.addEventListener('{{name}}', function(e) {
 		// Method will be one of create, read, update, or delete
 		var method = e.method;
 		var data = e.response;
 	});
-```   
+```
 The event prefix `backend` is used by default but this can be customized by setting the
 event name on the server.
 ```
@@ -111,9 +111,9 @@ logger to our backend:
         console.log(JSON.stringify(req.model));
         next();
     });
-    
+
     backend.use(crudr.helpers.memoryStore());
-    
+
 A request object will contain the following objects (in addition to those set by
 the various middleware):
 
@@ -122,7 +122,7 @@ the various middleware):
 * `options`: any options set by the client (except success and error callbacks)
 * `backend`: name of the backend responsible for handling the request
 * `socket`: the client socket that initiated the request
-    
+
 We can also target only particular types of requests by passing the desired contexts to `use`:
 
     backend.use('create', 'update', 'delete', function(req, res, next) {
@@ -132,7 +132,7 @@ We can also target only particular types of requests by passing the desired cont
             next(new Error('Unauthorized'));
         }
     });
-    
+
 Or alternatively by using one of the four helper methods (`create`, `read`, `update`, `delete`):
 
     backend.read(function(req, res) {
@@ -142,9 +142,9 @@ Or alternatively by using one of the four helper methods (`create`, `read`, `upd
             req.end(mymodels);
         }
     });
-    
+
 If the bottom of the middleware stack is reached before a result is returned then the requested
-model is returned by default: `res.end(req.model)`. 
+model is returned by default: `res.end(req.model)`.
 
 Clients are automatically notified of events triggered by other clients, however, there may
 be cases where other server-side code needs to make updates to a model outside of a backend
@@ -153,14 +153,14 @@ For example:
 
     var backend = crudr.createBackend();
     backend.use(crudr.helpers.memoryStore());
-    
+
     // Clients will receive 'backend:create', 'backend:update',
     // and 'backend:delete' events respectively.
     backend.emit('created', { id: 'myid', foo: 'bar' });
     backend.emit('updated', { id: 'myid', foo: 'baz' });
     backend.emit('deleted', { id: 'myid' });
- 
-    
+
+
 ## Customizing
 
 In addition to middleware, the behavior of CRUDr can be customized via standard Socket.IO
@@ -172,11 +172,11 @@ manipulated further.  See [http://socket.io](http://socket.io) for more details.
 Install development dependencies:
 
     npm install
-    
+
 Run the test suite:
 
     make test
-	
+
 
 ## Constributors
 
@@ -188,7 +188,7 @@ Run the test suite:
 [github](https://github.com/scttnlsn "Github account")
 
 
-## Credits 
+## Credits
 
 Distributed by [Makesites.org](http://makesites.org)
 

@@ -1,17 +1,17 @@
 module.exports = config = {
 	"name" : "crudr",
-	"host" : "localhost", 
-	"domain_prefix" : "", 
+	"host" : "localhost",
+	"domain_prefix" : "",
 	"routes" : {
-		"oauth" : "/oauth", 
-		"auth" : "auth", 
-		"rest" : "/data", 
-		"client": "/crudr/client.js" 
-	}, 
+		"oauth" : "/oauth",
+		"auth" : "auth",
+		"rest" : "/data",
+		"client": "/crudr.js"
+	},
 	"action" : {
-		"register" : "/crudr/register", 
+		"register" : "/crudr/register",
 		"reset" : "/crudr/reset"
-	}, 
+	},
 	"backends" : {},
 	"scope" : {},
 	"namespace" : false
