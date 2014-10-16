@@ -12,7 +12,8 @@ module.exports = config = {
 		"register" : "/crudr/register",
 		"reset" : "/crudr/reset"
 	},
-	"backends" : {},
+	backends: [], // an array or object of every backend binded
+	store: "memory", // the type of store to be used, if a common store type is applicable
 	"scope" : {},
 	"namespace" : false
 }
