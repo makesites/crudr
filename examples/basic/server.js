@@ -8,7 +8,7 @@ var server = http.createServer(app);
 // override default config
 var config = {
 	"backends": {
-		"test": "memoryStore"
+		"test": "memory"
 	}
 }
 
