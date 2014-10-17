@@ -1,6 +1,7 @@
 module.exports = config = {
 	name: "crudr",
 	host: "localhost",
+	auth: false,
 	//domain_prefix: "",
 	routes: {
 	//	"oauth" : "/oauth",

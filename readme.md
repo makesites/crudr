@@ -45,6 +45,25 @@ On the client:
 
 
 
+### Authority
+
+Part of the main options of the lib is passing a custom method under the ```authority``` key. This method will be triggered every time a token needs to be verified. It is assumed that it will be part of your _app_ and connected to the necessary modules that will make this verification possible.
+
+An example of the basic scaffolding follows:
+```
+function( req, res, callback ){
+
+	var token = req.data;
+	// db already available...
+	db.find({ token: token }, function( data ){
+		callback( data );
+	});
+
+}
+```
+**Note:** A token is **required** when authentication is activated, so make sure you obtain one from your backend before running ```crudr.connect```
+
+
 ## Events
 
 When a model is synced with a particular backend, the backend will trigger events

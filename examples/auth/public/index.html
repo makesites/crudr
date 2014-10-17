@@ -7,9 +7,9 @@
 
 	<script>
 		// variables
-		var auth =  {
-			key : "37fff53aeb6094f55b0328082aaf1de7",
-			log : true
+		var options =  {
+			token: "37fff53aeb6094f55b0328082aaf1de7",
+			log: true
 		};
 
 		function setupTrigger(){
@@ -20,7 +20,7 @@
 
 		function initConnect(){
 
-			crudr.connect(auth, function( response ){
+			crudr.connect(options, function( response ){
 
 				alert("authentication completed");
 

@@ -5,14 +5,18 @@ var express = require("express"),
 var app = express();
 var server = http.createServer(app);
 
+// Authentication
+// - simplistic example to verify client
+function authority( req, res, callback ){
+	// verify token (against a db in production)
+	var token = "37fff53aeb6094f55b0328082aaf1de7";
+	return callback( token == req.data );
+}
+
 // override default config
 var config = {
-	"backends": ["test"]
-	/* custom auth link:
-	"routes" : {
-		"auth" : "auth"
-	}
-	*/
+	auth: true,
+	backends: ["test"]
 }
 
 // setup options
@@ -23,20 +27,11 @@ var options = {
 };
 
 // initialize CRUDr
+crudr.use({ authority: authority });
 crudr.listen(options);
 
 // map  static folder
 app.use(express.static(__dirname + '/public'));
 
-// Authentication
-// - simplistic example to verify client
-app.get("/auth", function( req, res ){
-	// verify host
-	// create token
-	var access_token = "234tyh34567865432";
-	var expires_in = 3600; // an hour
-	// send response
-	res.send({ access_token: access_token, expires_in : expires_in });
-});
 
 server.listen(80);

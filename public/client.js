@@ -17,17 +17,18 @@ var crudr;
 	CRUDr.prototype = {
 
 		state : {
+			init : false,
 			auth : false,
 			deps: false,
-			socket: false
+			socket: false,
+			ready: false
 		},
 
 		// defaults
 		options : {
 			log : false,
 			auth : true,
-			key : false,
-			secret : false
+			namespace: ""
 		},
 
 		init : function(){
@@ -38,65 +39,25 @@ var crudr;
 			//this.promise.add( this.sockets );
 
 			// this does nothing??
-			this.status("initialized");
-
+			//this.status("initialized");
 		},
 
 		connect: function( options, callback){
 			var self = this;
-			// fallback
-			options || (options = {});
-			// merge with defaults
+			// fallbacks
+			options = options || {};
+
+			// merge with defaults (use object extend?)
 			for( var i in options ){
 				this.options[i] = options[i];
 			}
-			this.redirect_uri = window.location;
+			//this.redirect_uri = window.location;
 			// add the (original) calback in the promise list
 			if( typeof callback != "undefined" ) {
 				this.promise.add( callback );
 			}
 
-			// set auth state
-			if( typeof options.auth == "undefined" ) options.auth = true;
-
-			// If key is provided expect a valid confirmation from the callback
-			// unless auth=false, then the key is disegarded...
-			if( typeof options.key != "undefined" &&  options.auth ) {
-
-				// get the token...
-				var cookie = Cookie.get("crudr_token");
-
-				// if (window.location.hash.length == 0) {
-				//if( typeof( cookie ) == "undefined" && typeof( token ) == "undefined" ){
-				if( typeof( cookie ) == "undefined" ){
-
-					var path = '{{host}}/{{authorize}}';
-					var params = [];
-					// condition the use of the following params
-					if( options.key ) params.push( 'client_id=' + options.key );
-					if( options.secret ) params.push( 'client_secret=' + options.secret );
-					// always add a redirect uri and the response type
-					//params.push( 'redirect_uri=' + this.redirect_uri );
-					params.push( 'response_type=token' );
-
-					var url = path + "?" + params.join('&');
-
-					//window.location= url;
-					ajax( url, function( res ){ self.auth( res ); } );
-
-
-				} else {
-					// continue with the cookie we already have...
-					this.token = cookie;
-					this.status("authenticated");
-
-				}
-			} else {
-
-				// skip authentication...
-				this.status("authenticated");
-
-			}
+			this.status("init");
 
 		},
 
@@ -141,39 +102,51 @@ var crudr;
 		},
 
 		status : function( flag ){
-
+			// states, in order expected
 			switch( flag ){
-				case "authenticated":
-					this.state.auth = true;
-				break;
-				case "failed":
-					this.state.auth = false;
-				break;
 				case "loaded":
+					// flags
 					this.state.deps = true;
+					// events
+					if(this.state.init) this.sockets();
+				break;
+				case "init":
+					// flags
+					this.state.init = true;
+					// async execution - if deps loaded continue...
+					if(this.state.deps) this.sockets();
 				break;
 				case "connected":
+					// flags
 					this.state.socket = true;
+					// events
+					this.auth();
+				break;
+				case "ready":
+					// flags
+					this.state.ready = true;
+					// events
+					this.promise.resolve();
+				break;
+				case "failed":
+					// flags
+					this.state.auth = false;
+					// events
+					// close connection
+					socket.disconnect();
 				break;
 				case "disconnected":
+					// flags
 					this.state.socket = false;
+					// events
+					//... try again?
 				break;
 			};
 
-			// log the event...
+			// log the state...
 			var log = this.options.log;
 			if( log ) this.log(flag);
 
-			// check if the right flags are in place
-			if( this.state.auth && this.state.deps ) {
-				// load the sockets
-				this.sockets();
-			}
-
-			if( this.state.socket ) {
-				// load the callback
-				this.promise.resolve();
-			}
 		}
 
 	}
@@ -229,10 +202,50 @@ var crudr;
 	};
 
 
-	CRUDr.prototype.auth = function( response ){
+	// authenticate token
+	CRUDr.prototype.auth = function(){
 		// settings
 		var log = this.options.log;
 
+		this.token = this.token || this.options.token || Cookie.get("crudr_token") || false;
+		var auth = this.options.auth;
+		// authentication
+		if( !auth ) return this.status("ready"); // skip this step
+		// If token is provided expect a valid confirmation from the callback
+		// unless auth=false, then the token is disegarded...
+		if( this.token ){
+			//authenticate
+			socket.emit('token', this.token);
+			//socket.emit('token', req, function(err, resp) {
+		} else {
+			// if authentication is required you'll need to sort out the token before connecting...
+			return this.status("failed");
+		};
+/*
+			// get the token...
+			var token = ;
+
+			// if (window.location.hash.length == 0) {
+			//if( typeof( cookie ) == "undefined" && typeof( token ) == "undefined" ){
+			if( typeof( token ) == "undefined" ){
+
+				var path = '{{host}}/{{authorize}}';
+				var params = [];
+				// condition the use of the following params
+				if( options.key ) params.push( 'client_id=' + options.key );
+				if( options.secret ) params.push( 'client_secret=' + options.secret );
+				// always add a redirect uri and the response type
+				//params.push( 'redirect_uri=' + this.redirect_uri );
+				params.push( 'response_type=token' );
+
+				var url = path + "?" + params.join('&');
+
+				//window.location= url;
+				ajax( url, function( res ){ self.auth( res ); } );
+*/
+
+
+		/* OLD auth
 		try{
 
 			if( response.error ){
@@ -244,7 +257,7 @@ var crudr;
 				// console.log access token?
 				//
 				// save token in cookie...
-				Cookie.set("crudr_token", token, expiry);
+				Cookie.set("crudr_token", token, expiry); // namespace this to allow more than one cookies?
 				this.token = token;
 				// in any case set the state of the object to:
 				this.status("authenticated");
@@ -254,6 +267,7 @@ var crudr;
 			// there was an exception in processing the request - output a default message (for now)
 			console.log("There was an unexpected error loading CRUDr. Please send a report to: http://crudr.com/support");
 		}
+		*/
 
 		/* else {
 			this.state("connected");
@@ -266,21 +280,23 @@ var crudr;
 		var self = this;
 
 		// initiate handshake
-		socket = io('{{host}}');
+		socket = io('/'+ this.options.namespace );
 
 		// main sockets switch
 		socket.on('connect', function(){
+			self.status("connected");
+		});
 
-			socket.emit('token', self.token);
-			socket.on('ready', function () {
-				self.status("connected");
-			});
+		socket.on('ready', function () {
+			self.status("ready");
+		});
+
+		socket.on('failed', function( auth ){
+			self.status("failed");
 		});
 
 		socket.on('disconnect', function(){
-
 			self.status("disconnected");
-
 		});
 
 	};
@@ -357,6 +373,7 @@ function Promise (obj) {
 
 
 // - create an ajax request
+/*
 function ajax( url, callback ){
 
 	var req = new XMLHttpRequest();
@@ -373,6 +390,7 @@ function ajax( url, callback ){
 	}
 
 }
+*/
 
 // - cookies...
 var Cookie = {
