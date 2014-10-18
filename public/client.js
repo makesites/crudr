@@ -168,7 +168,7 @@ var crudr;
 
 		var backend = setupBackend( options );
 
-		socket.emit('subscribe', { backend: name }, function(options) {
+		socket.emit('subscribe', { name: name }, function(options) {
 			backend.options = options;
 			socket.on('synced', function(method, resp) {
 				var event = backend.options.event;
