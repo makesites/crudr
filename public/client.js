@@ -278,6 +278,9 @@ var crudr;
 
 	CRUDr.prototype.sockets = function(){
 		var self = this;
+		var io = this.io || window.io || io || false;
+
+		if( !io) return this.log("sockets are not available");
 
 		// initiate handshake
 		socket = io('/'+ this.options.namespace );
@@ -454,14 +457,18 @@ if(typeof io !== "undefined"){
 } else {
 	// first check if there is a module loader
 	if (typeof define === "function" && define.amd) {
-		define([_socket_io_js], function(){ crudr.status("loaded") });
+		define([_socket_io_js], function( io ){
+			crudr.io = io;
+			crudr.status("loaded");
+		});
 	} else {
 	// load the script with a new tag
 		(function() {
 			var po = document.createElement('script'); po.type = 'text/javascript'; po.async = false;
 			po.src = _socket_io_js;
 			po.onreadystatechange = po.onload = function(){ crudr.status("loaded") };
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			var head = document.getElementsByTagName("head")[0];
+			head.appendChild(po);
 		})();
 	}
 }
