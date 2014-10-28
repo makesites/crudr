@@ -6,12 +6,19 @@ __Open source module for socket-enabled CRUD operations in Node.js__
 ## Features
 
 * Authentication compatible with OAuth2 (using middleware)
-
+* Session support
 
 ## Install
 ```
 	npm install crudr
 ```
+
+### Dependencies
+
+- Socket.io
+- Express (only for uri routes)
+- Underscore
+
 
 ## Usage
 
@@ -37,13 +44,6 @@ On the client:
 
 ```
 
-## Dependencies
-
-- Socket.io
-- Express (only for uri routes)
-- Underscore
-
-
 
 ### Authority
 
@@ -64,7 +64,7 @@ function( req, res, callback ){
 **Note:** A token is **required** when authentication is activated, so make sure you obtain one from your backend before running ```crudr.connect```
 
 
-## Events
+### Events
 
 When a model is synced with a particular backend, the backend will trigger events
 on the object (across multiple clients) that share the backend.
@@ -114,7 +114,7 @@ event name on the server.
 ```
 More information on the [initialization options](https://github.com/makesites/crudr/wiki/Initialization-Options) is available [at the wiki](https://github.com/makesites/crudr/wiki/Initialization-Options)
 
-## Backends
+### Backends
 
 Backends are stacks of composable middleware (inspired by Connect) that are responsible
 for handling sync requests and responding appropriately.  Each middleware is a function
@@ -179,12 +179,35 @@ For example:
     backend.emit('updated', { id: 'myid', foo: 'baz' });
     backend.emit('deleted', { id: 'myid' });
 
+### Sessions
 
-## Customizing
+Sessions are supported as an extension of the initialization options. Fore example:
+```
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+
+var options = {
+	...
+	session: {
+		store: new RedisStore(options),
+		secret: 'keyboard cat'
+	}
+};
+
+// initialize CRUDr
+crudr.listen(options);
+
+```
+
+The ```session``` attribute is an sub-object of related options. Essential attributes are the ```store``` and ```secret``` used for the sessions. Extended attributes include the optional ```parser``` (defaults to a new instance of the cookieParser) and ```key``` (defaults to 'sid')
+
+
+### Customizing
 
 In addition to middleware, the behavior of CRUDr can be customized via standard Socket.IO
 mechanisms.  The object returned from the call to `listen` is the Socket.IO object and can be
 manipulated further.  See [http://socket.io](http://socket.io) for more details.
+
 
 ## Tests
 
