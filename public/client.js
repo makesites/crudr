@@ -101,6 +101,25 @@ var crudr;
 			this.sync("delete", req, callbacks);
 		},
 
+		// sesion params
+		get : function( key, callback ) {
+			// prerequisites
+			if( !key ) return;
+			// fallbacks
+			callback = callback || function(){};
+			socket.emit('_get', key, callback);
+		},
+
+		set : function( data, callback ){
+			// prerequisites
+			if( !data ) return;
+			// fallbacks
+			callback = callback || function(){};
+			// test if data is an object?
+			socket.emit('_set', key, callback);
+		},
+
+
 		status : function( flag ){
 			// states, in order expected
 			switch( flag ){
