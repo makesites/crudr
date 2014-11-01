@@ -116,7 +116,7 @@ var crudr;
 			// fallbacks
 			callback = callback || function(){};
 			// test if data is an object?
-			socket.emit('_set', key, callback);
+			socket.emit('_set', data, callback);
 		},
 
 
