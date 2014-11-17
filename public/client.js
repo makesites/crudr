@@ -26,6 +26,7 @@ var crudr;
 
 		// defaults
 		options : {
+			host: window.location.host,
 			log : false,
 			auth : true,
 			namespace: ""
@@ -78,6 +79,10 @@ var crudr;
 					if( log ) self.log( data );
 				}
 			});
+		},
+
+		socket: function(){
+			return socket;
 		},
 
 		// CRUD methods
@@ -302,7 +307,7 @@ var crudr;
 		if( !io) return this.log("sockets are not available");
 
 		// initiate handshake
-		socket = io('/'+ this.options.namespace );
+		socket = io( window.location.protocol + "//"+ this.options.host +"/"+ this.options.namespace );
 
 		// main sockets switch
 		socket.on('connect', function(){
