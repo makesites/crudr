@@ -93,17 +93,17 @@ var crudr;
 
 		read: function( req, callbacks ){
 			req.method = "read";
-			this.sync("read", req, callbacks);
+			this.sync(req, callbacks);
 		},
 
 		update: function( req, callbacks ){
 			req.method = "update";
-			this.sync("update", req, callbacks);
+			this.sync(req, callbacks);
 		},
 
 		"delete": function( req, callbacks ){
 			req.method = "delete";
-			this.sync("delete", req, callbacks);
+			this.sync(req, callbacks);
 		},
 
 		// sesion params
