@@ -26,7 +26,7 @@ var crudr;
 
 		// defaults
 		options : {
-			host: window.location.host,
+			host: "{{host}}", //window.location.host,
 			log : false,
 			auth : true,
 			namespace: ""
@@ -470,7 +470,7 @@ this.crudr = new CRUDr();
 
 // load dependencies
 // - the socket.io lib
-var _socket_io_js = "{{host}}/socket.io/socket.io.js";
+var _socket_io_js = "//{{host}}/socket.io/socket.io.js";
 
 // could also use: //cdn.socket.io/socket.io-1.1.0.js
 
