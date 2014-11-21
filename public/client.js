@@ -307,7 +307,9 @@ var crudr;
 		if( !io) return this.log("sockets are not available");
 
 		// initiate handshake
-		socket = io( window.location.protocol + "//"+ this.options.host +"/"+ this.options.namespace );
+		socket = io( window.location.protocol + "//"+ this.options.host +"/"+ this.options.namespace, {
+			query: "namespace="+this.options.namespace
+		});
 
 		// main sockets switch
 		socket.on('connect', function(){
