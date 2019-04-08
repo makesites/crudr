@@ -19,6 +19,7 @@
 	"bugs": {
 		"url": "https://github.com/makesites/crudr/issues"
 	},
+	"license": "Apache-2.0",
 	"licenses": [
 		{
 		"type": "Apache License, Version 2.0",
