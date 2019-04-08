@@ -6,8 +6,8 @@
 	"contributors": [
 		{ "name": "Makis Tracend", "email": "makis@makesit.es" }
 	],
-	"homepage": "http://www.makesites.org/crudr",
-	"keywords": ["node", "node.js", "crud", "api", "socket", "websocket"],
+	"homepage": "http://www.makesites.org/projects/crudr",
+	"keywords": ["node", "crud", "api", "socket", "websocket"],
 	"main": "index",
 	"engines": {
 		"node": ">=0.8.x"
