@@ -10,7 +10,7 @@
 	"keywords": ["node", "crud", "api", "socket", "websocket"],
 	"main": "index",
 	"engines": {
-		"node": ">=0.8.x"
+		"node": ">=10.x.x"
 	},
 	"repository": {
 	"type": "git",
